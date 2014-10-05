@@ -4,6 +4,7 @@ module Restspec
   # Your code goes here...
 end
 
+require "restspec/values/status_code"
 require "restspec/configuration"
 require "restspec/schema_definer"
 require "restspec/super_hash"
