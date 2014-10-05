@@ -1,4 +1,5 @@
 require 'faker'
+require_relative './schema/checker'
 
 module Restspec
   def self.define_schemas(&block)
@@ -45,7 +46,7 @@ module Restspec
     attr_accessor :schema
 
     def initialize(name)
-      self.schema = Schema.new(name)
+      self.schema = Schema::Schema.new(name)
     end
 
     def attribute(name, type)
@@ -53,20 +54,22 @@ module Restspec
     end
   end
 
-  class Schema
-    attr_accessor :name, :attributes
+  module Schema
+    class Schema
+      attr_accessor :name, :attributes
 
-    def initialize(name)
-      self.name = name
-      self.attributes = {}
-    end
+      def initialize(name)
+        self.name = name
+        self.attributes = {}
+      end
 
-    def example
-      attributes.inject({}) do |sample, (name, attribute)|
-        attribute_example = ExampleForType.new(attribute.type).example
-        sample.merge({
-          name => attribute_example
-        })
+      def example
+        attributes.inject({}) do |sample, (name, attribute)|
+          attribute_example = ExampleForType.new(attribute.type).example
+          sample.merge({
+            name => attribute_example
+          })
+        end
       end
     end
   end
@@ -79,29 +82,6 @@ module Restspec
       if type == String
         Faker::Lorem.word
       end
-    end
-  end
-
-  class SchemaChecker < Struct.new(:schema)
-    def check(actual)
-      if actual.is_a?(Array)
-        actual.each do |item|
-          check(item)
-        end
-      else
-        schema.attributes.each do |attribute_name, attribute|
-          if actual.has_key?(attribute_name)
-            value = actual.fetch(attribute_name)
-            if value.class != attribute.type
-              raise "The property #{attribute_name} of #{actual} should be of type #{attribute.type} but it was of type #{value.class}"
-            end
-          else
-            raise "The object #{actual} does not have the attribute #{attribute_name}"
-          end
-        end
-      end
-
-      return true
     end
   end
 end

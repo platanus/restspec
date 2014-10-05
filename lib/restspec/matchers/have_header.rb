@@ -1,6 +1,3 @@
-require 'rspec/expectations'
-require 'active_support/core_ext/object'
-
 module Restspec::HeaderTests
   class HaveKeyTest
     def perform(key, headers)

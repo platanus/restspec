@@ -1,4 +1,3 @@
-require 'rspec/expectations'
 require 'rack'
 
 RSpec::Matchers.define :have_status do |status_code|
