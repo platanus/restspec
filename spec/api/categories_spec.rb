@@ -13,7 +13,7 @@ RSpec.describe :categories, :type => :endpoint do
     it { should have_header('content-type') }
     it { should have_header('content-type').equals('application/json; charset=utf-8') }
     it { should have_header('content-type').that_contains('application/json') }
-    it { should have_header('content-type').that_contains(/json/) }
+    it { should have_header('content-type').that_matches(/json/) }
     it { should be_like_schema(:category) }
 
     its(:body) { should have_at_least(3).items }
