@@ -76,10 +76,32 @@ module Restspec
 
   class ExampleForType < Struct.new(:type)
     def example
-      case type
-      when String
+      if type == String
         Faker::Lorem.word
       end
+    end
+  end
+
+  class SchemaChecker < Struct.new(:schema)
+    def check(actual)
+      if actual.is_a?(Array)
+        actual.each do |item|
+          check(item)
+        end
+      else
+        schema.attributes.each do |attribute_name, attribute|
+          if actual.has_key?(attribute_name)
+            value = actual.fetch(attribute_name)
+            if value.class != attribute.type
+              raise "The property #{attribute_name} of #{actual} should be of type #{attribute.type} but it was of type #{value.class}"
+            end
+          else
+            raise "The object #{actual} does not have the attribute #{attribute_name}"
+          end
+        end
+      end
+
+      return true
     end
   end
 end

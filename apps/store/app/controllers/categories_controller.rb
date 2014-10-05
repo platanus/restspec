@@ -51,6 +51,6 @@ class CategoriesController < ApplicationController
   private
 
   def creation_params
-    params.fetch(:category).permit(:name)
+    params.permit(:name)
   end
 end
