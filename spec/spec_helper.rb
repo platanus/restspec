@@ -17,6 +17,14 @@ end
 
 Restspec.configure do |config|
   config.base_url = 'http://localhost:3000/api/v1'
-  config.request.headers['Content-Type'] = 'application/json'
-  config.request.headers['Accept'] = 'application/json'
+end
+
+# TODO: Move the schema definition to a custom file
+Restspec.define_schemas do
+  schema :category do
+    attribute :name, String
+    # name String, validate: { presence: true }
+    # price Float, validate: { presence: true, numericality: true }
+    # category_id Integer, is_one_of: ->{ read_endpoint('categories/index').map_by(:id) }
+  end
 end

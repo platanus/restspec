@@ -2,7 +2,7 @@ require 'httparty'
 
 module Restspec
   class Endpoint < Struct.new(:name, :method, :path, :namespace)
-    def execute(body = {})
+    def execute(body: {})
       Restspec::Network.request(method, url, headers, body).tap do |response|
         response.endpoint = self
       end
@@ -13,7 +13,7 @@ module Restspec
     end
 
     def execute_once(body: {})
-      @saved_execution ||= execute(body)
+      @saved_execution ||= execute(body: body)
     end
 
     private

@@ -9,7 +9,7 @@ module Restspec
     end
 
     def read_body
-      ResponseBody.from_raw_body(raw_body)
+      SuperHash.from_raw_body(raw_body)
     end
 
     def raw_body

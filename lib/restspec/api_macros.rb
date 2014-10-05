@@ -29,5 +29,14 @@ module Restspec
         instance_eval(&block)
       end
     end
+
+    def payload
+      before(:all) { @payload = SuperHash.new(yield) }
+      let(:payload) { @payload }
+    end
+
+    def schema_example(schema_name)
+      Restspec.example_for(schema_name)
+    end
   end
 end

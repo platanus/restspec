@@ -5,7 +5,8 @@ module Restspec
 end
 
 require "restspec/configuration"
-require "restspec/response_body"
+require "restspec/schema_definer"
+require "restspec/super_hash"
 require "restspec/response"
 require "restspec/network"
 require "restspec/endpoint"

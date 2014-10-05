@@ -1,7 +1,7 @@
 require 'hashie'
 
 module Restspec
-  class ResponseBody < Hash
+  class SuperHash < Hash
     include Hashie::Extensions::MethodAccess
     include Hashie::Extensions::IndifferentAccess
     include Hashie::Extensions::MergeInitializer

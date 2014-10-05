@@ -5,7 +5,7 @@ RSpec.describe :categories, :type => :endpoint do
     before(:all) do
       initial_categories = read_endpoint
       if initial_categories.size < 3
-        3.times.map { read_endpoint('categories/create') }
+        3.times.map { read_endpoint('categories/create', body: { category: schema_example(:category) }) }
       end
     end
 
@@ -20,11 +20,14 @@ RSpec.describe :categories, :type => :endpoint do
   end
 
   endpoint :create, :post => '/categories' do
-    # let(:payload) { schema_example(:product) }
-    let(:payload) { { category: { name: 'Super Category' } } }
+    payload do
+      { category: schema_example(:category) }
+      # { category: { name: 'Super Category' } }
+    end
 
     it { should have_status(:created) }
 
-    its('body.name') { should eq('Super Category') }
+    its('body.name') { should eq(payload.category[:name]) }
+    # it { should be_like_schema(:category) }
   end
 end
