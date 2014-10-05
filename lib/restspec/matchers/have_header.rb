@@ -29,8 +29,6 @@ end
 
 RSpec::Matchers.define :have_header do |key|
   match do |response|
-    headers = response.headers
-
     chained_test.perform(key, response.headers)
   end
 
