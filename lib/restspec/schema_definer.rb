@@ -4,31 +4,28 @@ require_relative './schema/attribute_example'
 require_relative './schema/schema_example'
 require_relative './schema/schema'
 require_relative './schema/dsl'
+require_relative './schema/finder'
 
 module Restspec
-  def self.define_schemas(&block)
-    @dsl = Schema::DSL.new
-    @dsl.instance_eval(&block)
-  end
+  class << self
+    attr_reader :dsl
 
-  def self.schemas
-    @dsl ? @dsl.schemas : {}
-  end
-
-  def self.dsl
-    @dsl
-  end
-
-  def self.find_schema(schema_name)
-    schemas.fetch(schema_name)
-  end
-
-  def self.example_for(schema_name)
-    schema = Restspec.find_schema(schema_name)
-    if schema
-      Schema::SchemaExample.new(schema).value
-    else
-      raise "Unexisting schema: #{schema_name}"
+    def define_schemas(&block)
+      self.dsl = Schema::DSL.new
+      self.dsl.instance_eval(&block)
     end
+
+    def example_for(schema_name)
+      schema = Restspec::Schema::Finder.new.find(schema_name)
+      if schema.present?
+        Schema::SchemaExample.new(schema).value
+      else
+        raise "Unexisting schema: #{schema_name}"
+      end
+    end
+
+    private
+
+    attr_writer :dsl
   end
 end
