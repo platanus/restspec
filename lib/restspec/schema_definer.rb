@@ -17,11 +17,7 @@ module Restspec
 
     def example_for(schema_name)
       schema = Restspec::Schema::Finder.new.find(schema_name)
-      if schema.present?
-        Schema::SchemaExample.new(schema).value
-      else
-        raise "Unexisting schema: #{schema_name}"
-      end
+      Schema::SchemaExample.new(schema).value
     end
 
     private
