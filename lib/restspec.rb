@@ -13,5 +13,7 @@ require "restspec/response"
 require "restspec/network"
 require "restspec/endpoint"
 require "restspec/namespace"
+
+require "restspec/rspec/extras"
 require "restspec/rspec/api_helpers"
 require "restspec/rspec/api_macros"
