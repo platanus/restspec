@@ -6,9 +6,9 @@ end
 
 require 'active_support/core_ext/object'
 require "restspec/values/status_code"
+require "restspec/values/super_hash"
 require "restspec/configuration"
-require "restspec/schema_definer"
-require "restspec/super_hash"
+require "restspec/schema_definitions"
 require "restspec/response"
 require "restspec/network"
 require "restspec/endpoint"

@@ -5,7 +5,7 @@ module Restspec
 
   class << self
     def configure
-      # TODO: This is json specific, try to refactor
+      # TODO: This is json specific, try to refactor if needed
       config.request = OpenStruct.new(headers: {})
       config.request.headers['Content-Type'] = 'application/json'
       config.request.headers['Accept'] = 'application/json'

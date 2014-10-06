@@ -32,7 +32,7 @@ module Restspec
       end
 
       def payload
-        before(:all) { @payload = SuperHash.new(yield) }
+        before(:all) { @payload = Restspec::Values::SuperHash.new(yield) }
         let(:payload) { @payload }
       end
 

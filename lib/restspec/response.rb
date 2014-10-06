@@ -14,7 +14,7 @@ module Restspec
           read_body(item)
         end
       else
-        SuperHash.new(parsed_body)
+        Values::SuperHash.new(parsed_body)
       end
     end
 
