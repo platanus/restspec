@@ -19,10 +19,27 @@ end
 
 # TODO: Move the schema definition to a custom file
 Restspec.define_schemas do
+  # type :decimal_string do |value|
+  #   value.is_a?(String) && /^\d+([.,]\d+)?$/.match(value).present?
+  # end
+
   schema :category do
+    # attribute :name, :string
     attribute :name, String
-    # name String, validate: { presence: true }
-    # price Float, validate: { presence: true, numericality: true }
-    # category_id Integer, is_one_of: ->{ read_endpoint('categories/index').map_by(:id) }
+  end
+
+  schema :product do
+    attribute :name, String
+    attribute :category_id, Fixnum
+    # attribute :name, :string
+    # attribute :price, :decimal_string
+    # attribute :category_id, :fixnum
+
+    # For Next Iteration (for 422 cases)
+    # validates :name, presence: true
+    # validates :price, presence: true, numericality: true
+    # validates :category_id, inclusion: ->{
+    #   read_endpoint('categories/index').map_by(:id)
+    # }
   end
 end

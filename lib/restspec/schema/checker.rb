@@ -18,7 +18,7 @@ module Restspec
           checker = ObjectChecker.new(object, attribute)
           
           raise NoAttributeError.new(object, attribute) if checker.missed_key?
-          raise DifferentTypeError.new(object, attribute, value) if checker.wrong_type?
+          raise DifferentTypeError.new(object, attribute) if checker.wrong_type?
         end
       end
 
@@ -48,10 +48,10 @@ module Restspec
       class DifferentTypeError < StandardError
         attr_accessor :object, :attribute, :value
 
-        def initialize(object, attribute, value)
+        def initialize(object, attribute)
           self.object = object
           self.attribute = attribute
-          self.value = value
+          self.value = object.fetch(attribute.name)
         end
 
         def to_s
