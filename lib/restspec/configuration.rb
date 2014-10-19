@@ -11,6 +11,23 @@ module Restspec
       config.request.headers['Accept'] = 'application/json'
 
       yield config
+
+      load_schema_definition if config.schema_definition.present?
+      load_endpoint_definition if config.endpoints_definition.present?
+    end
+
+    def load_schema_definition
+      definition = config.schema_definition
+      Restspec.define_schemas do
+        instance_eval(File.read(definition))
+      end
+    end
+
+    def load_endpoint_definition
+      definition = config.endpoints_definition
+      Restspec.define_endpoints do
+        instance_eval(File.read(definition))
+      end
     end
   end
 end

@@ -12,7 +12,7 @@ schema :product do
   })
 
   attribute :category_id, schema_id({
-    :fetch_endpoint => 'categories/index',
-    :create_endpoint => 'categories/create'
+    fetch_endpoint: 'categories/index',
+    create_endpoint: 'categories/create'
   })
 end

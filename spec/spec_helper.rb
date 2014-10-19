@@ -15,17 +15,6 @@ end
 
 Restspec.configure do |config|
   config.base_url = 'http://localhost:3000/api/v1'
-  # TODO: Improve this interface with this:
-  # config.schema_definition = 'api/api_schemas.rb'
-  # config.endpoints_definition = 'api/api_endpoints.rb'
-end
-
-current_directory = File.dirname(__FILE__)
-
-Restspec.define_schemas do
-  instance_eval(File.read(File.join(current_directory, "api", "api_schemas.rb")))
-end
-
-Restspec.define_endpoints do
-  instance_eval(File.read(File.join(current_directory, "api", "api_endpoints.rb")))
+  config.schema_definition = "#{File.dirname __FILE__}/api/api_schemas.rb"
+  config.endpoints_definition = "#{File.dirname __FILE__}/api/api_endpoints.rb"
 end
