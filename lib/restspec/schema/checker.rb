@@ -28,7 +28,7 @@ module Restspec
         end
 
         def wrong_type?
-          object.fetch(attribute.name).class != attribute.type
+          !attribute.type.valid?(attribute, object.fetch(attribute.name))
         end
       end
 

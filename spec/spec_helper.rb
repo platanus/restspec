@@ -15,31 +15,17 @@ end
 
 Restspec.configure do |config|
   config.base_url = 'http://localhost:3000/api/v1'
+  # TODO: Improve this interface with this:
+  # config.schema_definition = 'api/api_schemas.rb'
+  # config.endpoints_definition = 'api/api_endpoints.rb'
 end
 
-# TODO: Move the schema definition to a custom file
+current_directory = File.dirname(__FILE__)
+
 Restspec.define_schemas do
-  # type :decimal_string do |value|
-  #   value.is_a?(String) && /^\d+([.,]\d+)?$/.match(value).present?
-  # end
+  instance_eval(File.read(File.join(current_directory, "api", "api_schemas.rb")))
+end
 
-  schema :category do
-    # attribute :name, :string
-    attribute :name, String
-  end
-
-  schema :product do
-    attribute :name, String
-    attribute :category_id, Fixnum
-    # attribute :name, :string
-    # attribute :price, :decimal_string
-    # attribute :category_id, :fixnum
-
-    # For Next Iteration (for 422 cases)
-    # validates :name, presence: true
-    # validates :price, presence: true, numericality: true
-    # validates :category_id, inclusion: ->{
-    #   read_endpoint('categories/index').map_by(:id)
-    # }
-  end
+Restspec.define_endpoints do
+  instance_eval(File.read(File.join(current_directory, "api", "api_endpoints.rb")))
 end

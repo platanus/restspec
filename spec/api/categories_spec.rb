@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe :categories, :type => :endpoint do
-  endpoint :index, :get => '/categories' do
+  endpoint 'categories/index' do
     before(:all) do
       initial_categories = read_endpoint
       if initial_categories.size < 3
@@ -19,7 +19,7 @@ RSpec.describe :categories, :type => :endpoint do
     its(:body) { should have_at_least(3).items }
   end
 
-  endpoint :create, :post => '/categories' do
+  endpoint 'categories/create' do
     payload { schema_example(:category) }
 
     it { should have_status(:created) }

@@ -4,7 +4,7 @@ module Restspec
       def value
         attributes.inject({}) do |sample, (_, attribute)|
           sample.merge({
-            attribute.name => AttributeExample.new(attribute.type).value
+            attribute.name => AttributeExample.new(attribute).value
           })
         end
       end

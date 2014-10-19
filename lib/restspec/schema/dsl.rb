@@ -26,7 +26,14 @@ module Restspec
       end
 
       def attribute(name, type)
-        schema.attributes[name.to_s] = Attribute.new(name, type)
+        new_attribute = Attribute.new(name, type)
+        schema.attributes[name.to_s] = new_attribute
+      end
+
+      Types::ALL.each do |type_name, type_class|
+        define_method(type_name) do |options = {}|
+          type_class.new(options)
+        end
       end
 
       private

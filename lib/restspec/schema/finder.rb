@@ -8,7 +8,7 @@ module Restspec
       private
 
       def schemas
-        Restspec.dsl.schemas || {}
+        Restspec.schema_dsl.schemas || {}
       end
     end
   end

@@ -5,14 +5,27 @@ module Restspec
 end
 
 require 'active_support/core_ext/object'
+
 require "restspec/values/status_code"
 require "restspec/values/super_hash"
+
 require "restspec/configuration"
-require "restspec/schema_definitions"
-require "restspec/response"
-require "restspec/network"
-require "restspec/endpoint"
-require "restspec/namespace"
+require "restspec/dsl_definitions"
+
+require "restspec/schema/checker"
+require "restspec/schema/types"
+require "restspec/schema/attribute"
+require "restspec/schema/attribute_example"
+require "restspec/schema/schema_example"
+require "restspec/schema/schema"
+require "restspec/schema/dsl"
+require "restspec/schema/finder"
+
+require "restspec/endpoints/dsl"
+require "restspec/endpoints/response"
+require "restspec/endpoints/network"
+require "restspec/endpoints/endpoint"
+require "restspec/endpoints/namespace"
 
 require "restspec/rspec/extras"
 require "restspec/rspec/api_helpers"

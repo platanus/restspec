@@ -5,7 +5,7 @@ module Restspec
     module ApiHelpers
       def read_endpoint(endpoint_full_name = nil, body: {})
         if endpoint_full_name.present?
-          endpoint = Namespace.get_by_full_name(endpoint_full_name)
+          endpoint = Restspec::Endpoints::Namespace.get_by_full_name(endpoint_full_name)
           endpoint.execute(body: body).read_body
         else
           @endpoint.execute(body: body).read_body
