@@ -1,5 +1,5 @@
 module Restspec::Schema::Types
-  class BooleanType < BasicType    
+  class BooleanType < BasicType
     def example_for(attribute)
       [true, false].sample
     end
