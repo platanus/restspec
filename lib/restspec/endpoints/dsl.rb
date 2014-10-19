@@ -15,6 +15,10 @@ module Restspec
         endpoint_dsl.instance_eval(&block)
         namespace.add_endpoint(endpoint)
       end
+
+      def schema(name)
+        namespace.schema_name = name
+      end
     end
 
     class EndpointDSL < Struct.new(:endpoint)

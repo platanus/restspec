@@ -1,4 +1,6 @@
 namespace :categories do
+  schema :category
+
   endpoint :index do
     method :get
     path '/categories'
@@ -11,6 +13,8 @@ namespace :categories do
 end
 
 namespace :products do
+  schema :product
+
   endpoint :index do
     method :get
     path '/products'

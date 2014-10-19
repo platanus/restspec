@@ -35,8 +35,11 @@ module Restspec::Schema::Types
     end
 
     def create_response
-      create_endpoint = find_endpoint(example_options.fetch(:create_endpoint))
-      create_endpoint.execute(create_example)
+      create_endpoint.execute(body: create_example)
+    end
+
+    def create_endpoint
+      @create_endpoint ||= find_endpoint(example_options.fetch(:create_endpoint))
     end
 
     def create_example
@@ -44,8 +47,7 @@ module Restspec::Schema::Types
     end
 
     def create_schema_name
-      # TODO: Get schema from endpoint instead of a property
-      example_options.fetch(:create_schema)
+      example_options.fetch(:create_schema, create_endpoint.schema_name)
     end
 
     def perform_validation?

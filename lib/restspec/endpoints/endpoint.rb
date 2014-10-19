@@ -19,6 +19,14 @@ module Restspec
         @saved_execution ||= execute(body: body)
       end
 
+      def schema_name
+        namespace.schema_name
+      end
+
+      def schema
+        @schema ||= Restspec::Schema::Finder.new.find(schema_name)
+      end
+
       private
 
       def headers

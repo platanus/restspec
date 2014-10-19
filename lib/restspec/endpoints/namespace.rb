@@ -1,6 +1,8 @@
 module Restspec
   module Endpoints
     class Namespace < Struct.new(:name)
+      attr_accessor :schema_name
+
       def add_endpoint(endpoint)
         endpoints << endpoint.tap do |endpoint|
           endpoint.namespace = self
