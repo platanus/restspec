@@ -1,5 +1,7 @@
-1. Change `:type => :endpoint` to `:type => :endpoints`
-2. Wrap this pattern:
+- Change `:type => :endpoint` to `:type => :endpoints`
+- Change the need to specify endpoints in `schema_id`. Just make the schema name to work.
+- Allow type algebra in types definition.
+- Wrap this pattern:
     
     ```ruby
     before(:all) do
@@ -16,5 +18,8 @@
     ensure_records 3
     ```
 
-3. The param for `be_like_schema` should default to the schema associated to the current namespace.
-4. Research authentication strategies.
+- The param for `be_like_schema` should default to the schema associated to the current namespace.
+- Nested namespaces.
+- Rename `namespace` to `resource` or create a `resource` method.
+- Research authentication strategies.
+- Research pagination strategies and integrating them with `schema_id`.
