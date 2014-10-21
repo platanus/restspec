@@ -23,3 +23,4 @@
 - Rename `namespace` to `resource` or create a `resource` method.
 - Research authentication strategies.
 - Research pagination strategies and integrating them with `schema_id`.
+- Find a way to modify the schema by endpoint
