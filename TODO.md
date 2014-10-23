@@ -1,4 +1,3 @@
-- Allow type algebra in types definition.
 - Wrap this pattern:
     
     ```ruby
