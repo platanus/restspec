@@ -40,11 +40,11 @@ require 'restspec'
 Inside the RSpec configuration block:
 
 ```ruby
-config.include Restspec::RSpec::ApiHelpers, :type => :endpoint
-config.extend Restspec::RSpec::ApiMacros, :type => :endpoint
+config.include Restspec::RSpec::ApiHelpers, :type => :api
+config.extend Restspec::RSpec::ApiMacros, :type => :api
 ```
 
-The later two lines adds the helpers, matchers and macros to any test with the `:endpoint` type.
+The later two lines adds the helpers, matchers and macros to any test with the `:api` type.
 
 Then, in the end of the RSpec configuration file:
 
@@ -180,7 +180,7 @@ Finally, we'll write a spec for products. The describe block should have the `en
 ```ruby
 require 'spec_helper'
 
-RSpec.describe 'Products endpoints', :type => :endpoint do
+RSpec.describe 'Products endpoints', :type => :api do
 end
 ```
 

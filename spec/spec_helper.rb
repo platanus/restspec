@@ -9,8 +9,8 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  config.include Restspec::RSpec::ApiHelpers, :type => :endpoint
-  config.extend Restspec::RSpec::ApiMacros, :type => :endpoint
+  config.include Restspec::RSpec::ApiHelpers, :type => :api
+  config.extend Restspec::RSpec::ApiMacros, :type => :api
 end
 
 Restspec.configure do |config|

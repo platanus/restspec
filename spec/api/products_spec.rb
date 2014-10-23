@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Products endpoints', :type => :endpoint do
+RSpec.describe 'Products endpoints', :type => :api do
   endpoint 'products/index' do
     before(:all) do
       initial_products = read_endpoint

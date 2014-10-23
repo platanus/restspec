@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe :categories, :type => :endpoint do
+RSpec.describe :categories, :type => :api do
   endpoint 'categories/index' do
     before(:all) do
       initial_categories = read_endpoint
