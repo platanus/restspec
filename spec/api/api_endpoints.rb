@@ -1,6 +1,4 @@
 namespace :categories do
-  schema :category
-
   endpoint :index do
     method :get
     path '/categories'
