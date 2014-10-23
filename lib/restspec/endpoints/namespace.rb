@@ -12,6 +12,12 @@ module Restspec
       def endpoints
         @endpoints ||= []
       end
+
+      def get_endpoint(endpoint_name)
+        endpoints.find do |endpoint|
+          endpoint.name = endpoint_name
+        end
+      end
     end
 
     class << Namespace
@@ -30,6 +36,12 @@ module Restspec
       def get_by_full_name(full_name)
         endpoints.find do |endpoint|
           endpoint.full_name == full_name
+        end
+      end
+
+      def get_by_schema_name(schema_name)
+        namespaces.find do |namespace|
+          namespace.schema_name == schema_name
         end
       end
 

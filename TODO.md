@@ -1,4 +1,3 @@
-- Change the need to specify endpoints in `schema_id`. Just make the schema name to work.
 - Allow type algebra in types definition.
 - Wrap this pattern:
     
