@@ -14,10 +14,15 @@ class Restspec::Schema::Types::BasicType
   end
 
   # Type Algebra
-  attr_accessor :disjuction
+  attr_accessor :disjuction, :parameterized_type
 
   def |(other_type)
     self.disjuction = other_type
+    self
+  end
+
+  def of(other_type)
+    self.parameterized_type = other_type
     self
   end
 
