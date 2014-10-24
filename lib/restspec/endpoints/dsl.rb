@@ -29,6 +29,13 @@ module Restspec
       def path(path)
         endpoint.path = path
       end
+
+      [:get, :post, :put, :patch, :delete, :head].each do |http_method|
+        define_method(http_method) do |path|
+          self.method http_method
+          self.path path
+        end
+      end
     end
   end
 end

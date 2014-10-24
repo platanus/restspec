@@ -12,9 +12,9 @@ module Restspec
       self.endpoints_dsl.instance_eval(&block)
     end
 
-    def example_for(schema_name)
+    def example_for(schema_name, extensions = {})
       schema = Restspec::Schema::Finder.new.find(schema_name)
-      Schema::SchemaExample.new(schema).value
+      Schema::SchemaExample.new(schema, extensions).value
     end
 
     private

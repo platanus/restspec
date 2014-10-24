@@ -1,12 +1,19 @@
 module Restspec
   module Schema
-    class SchemaExample < Struct.new(:schema)
+    class SchemaExample
+      attr_accessor :schema, :extensions
+
+      def initialize(schema, extensions = {})
+        self.schema = schema
+        self.extensions = extensions
+      end
+
       def value
         attributes.inject({}) do |sample, (_, attribute)|
           sample.merge({
             attribute.name => AttributeExample.new(attribute).value
           })
-        end
+        end.merge(extensions)
       end
 
       private

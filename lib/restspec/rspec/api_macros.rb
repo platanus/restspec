@@ -17,7 +17,11 @@ module Restspec
           end
 
           subject do
-            @response = @endpoint.execute_once(body: @payload, url_params: @url_params, query_params: @query_params)
+            @response = @endpoint.execute_once(
+              body: @payload,
+              url_params: @url_params,
+              query_params: @query_params
+            )
           end
 
           instance_eval(&block)
@@ -39,8 +43,8 @@ module Restspec
         let(:query_params) { @query_params }
       end
 
-      def schema_example(schema_name)
-        Restspec.example_for(schema_name)
+      def schema_example(schema_name, extensions = {})
+        Restspec.example_for(schema_name, extensions)
       end
 
       def within_response(&block)
