@@ -16,10 +16,8 @@ module Restspec
             @endpoint = endpoint
           end
 
-          let(:payload) { Restspec::Values::SuperHash.new }
-
           subject do
-            @response = @endpoint.execute_once(body: payload, query_params: query_params)
+            @response = @endpoint.execute_once(body: @payload, url_params: @url_params, query_params: @query_params)
           end
 
           instance_eval(&block)
@@ -29,6 +27,11 @@ module Restspec
       def payload
         before(:all) { @payload = Restspec::Values::SuperHash.new(yield) }
         let(:payload) { @payload }
+      end
+
+      def url_params
+        before(:all) { @url_params = Restspec::Values::SuperHash.new(yield) }
+        let(:url_params) { @url_params }
       end
 
       def query_params

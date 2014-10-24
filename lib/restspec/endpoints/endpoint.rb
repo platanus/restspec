@@ -5,8 +5,8 @@ module Restspec
     class Endpoint < Struct.new(:name)
       attr_accessor :method, :path, :namespace
 
-      def execute(body: {}, query_params: query_params)
-        full_url = build_url(query_params)
+      def execute(body: {}, url_params: {}, query_params: {})
+        full_url = build_url(url_params, query_params)
         Network.request(method, full_url, headers, body).tap do |response|
           response.endpoint = self
         end
@@ -16,8 +16,8 @@ module Restspec
         "#{namespace.name}/#{name}"
       end
 
-      def execute_once(body: {}, query_params: {})
-        @saved_execution ||= execute(body: body, query_params: query_params)
+      def execute_once(body: {}, url_params: {}, query_params: {})
+        @saved_execution ||= execute(body: body, url_params: url_params, query_params: query_params)
       end
 
       def schema_name
@@ -30,12 +30,15 @@ module Restspec
 
       private
 
-      def build_url(query_params)
-        if query_params.empty?
-          base_url + path
-        else
-          base_url + path.gsub(/:([\w]+)/) { query_params[$1] }
-        end
+      def build_url(url_params, query_params)
+        query_string = query_params.to_param
+        full_query_string = query_string ? "?#{query_string}" : ""
+
+        base_url + path_from_params(url_params) + full_query_string
+      end
+
+      def path_from_params(url_params)
+        path.gsub(/:([\w]+)/) { url_params[$1] }
       end
 
       def headers
