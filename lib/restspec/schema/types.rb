@@ -13,6 +13,7 @@ require_relative './types/boolean_type'
 require_relative './types/decimal_string_type'
 require_relative './types/schema_id_type'
 require_relative './types/array_type'
+require_relative './types/one_of_type'
 
 module Restspec::Schema::Types
   ALL = {
@@ -22,6 +23,7 @@ module Restspec::Schema::Types
     boolean: BooleanType,
     decimal_string: DecimalStringType,
     schema_id: SchemaIdType,
-    array: ArrayType
+    array: ArrayType,
+    one_of: OneOfType
   }
 end
