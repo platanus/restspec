@@ -39,6 +39,10 @@ module Restspec
         end
       end
 
+      def create_by_full_name(full_name)
+        get_by_full_name(full_name).dup
+      end
+
       def get_by_schema_name(schema_name)
         namespaces.find do |namespace|
           namespace.schema_name == schema_name
