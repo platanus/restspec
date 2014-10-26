@@ -3,8 +3,9 @@ require_relative './matchers/api_matchers'
 module Restspec
   module RSpec
     module ApiMacros
-      def endpoint(name, context_message = nil, &block)
+      def endpoint(name, context: nil, &block)
         endpoint = Restspec::Endpoints::Namespace.create_by_full_name(name)
+        context_message = context
 
         # Instance variables in the example context
         #   - @namespace
