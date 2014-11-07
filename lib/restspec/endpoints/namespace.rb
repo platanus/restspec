@@ -1,7 +1,7 @@
 module Restspec
   module Endpoints
     class Namespace < Struct.new(:name)
-      attr_accessor :schema_name
+      attr_accessor :schema_name, :base_path
 
       def add_endpoint(endpoint)
         endpoints << endpoint.tap do |endpoint|
@@ -9,8 +9,16 @@ module Restspec
         end
       end
 
+      def set_options(options)
+        self.base_path = options[:base_path] if options[:base_path]
+      end
+
       def endpoints
         @endpoints ||= []
+      end
+
+      def base_path
+        @base_path ||= ''
       end
 
       def get_endpoint(endpoint_name)

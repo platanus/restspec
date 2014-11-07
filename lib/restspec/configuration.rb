@@ -14,19 +14,26 @@ module Restspec
 
       load_schema_definition if config.schema_definition.present?
       load_endpoint_definition if config.endpoints_definition.present?
+      load_requirement_definition if config.requirements_definition.present?
     end
 
+    private
+
     def load_schema_definition
-      definition = config.schema_definition
-      Restspec.define_schemas do
-        instance_eval(File.read(definition))
-      end
+      load_definition config.schema_definition, :define_schemas
     end
 
     def load_endpoint_definition
-      definition = config.endpoints_definition
-      Restspec.define_endpoints do
-        instance_eval(File.read(definition))
+      load_definition config.endpoints_definition, :define_endpoints
+    end
+
+    def load_requirement_definition
+      load_definition config.requirements_definition, :define_requirements
+    end
+
+    def load_definition(definition_file, definition_method)
+      Restspec.public_send definition_method do
+        instance_eval(File.read(definition_file))
       end
     end
   end

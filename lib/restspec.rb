@@ -27,6 +27,10 @@ require "restspec/endpoints/network"
 require "restspec/endpoints/endpoint"
 require "restspec/endpoints/namespace"
 
+require "restspec/requirements/dsl"
+require "restspec/requirements/requirement"
+
 require "restspec/rspec/extras"
 require "restspec/rspec/api_helpers"
 require "restspec/rspec/api_macros"
+require "restspec/rspec/shared_examples"

@@ -25,8 +25,8 @@ module Restspec
         self.schema = Schema.new(name)
       end
 
-      def attribute(name, type)
-        new_attribute = Attribute.new(name, type)
+      def attribute(name, type, options = {})
+        new_attribute = Attribute.new(name, type, options)
         schema.attributes[name.to_s] = new_attribute
       end
 

@@ -1,19 +1,11 @@
 module Restspec
   module Schema
     class Checker < Struct.new(:schema)
-      def check!(body)
-        if body.is_a?(Array)
-          body.each { |item| check!(item) }
-        else
-          check_object(body)
-        end
-
-        return true
+      def check_array!(array)
+        array.each { |item| check!(item) }
       end
 
-      private
-
-      def check_object(object)
+      def check!(object)
         schema.attributes.each do |_, attribute|
           checker = ObjectChecker.new(object, attribute)
           
@@ -21,6 +13,8 @@ module Restspec
           raise DifferentTypeError.new(object, attribute) if checker.wrong_type?
         end
       end
+
+      private
 
       class ObjectChecker < Struct.new(:object, :attribute)
         def missed_key?

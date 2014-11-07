@@ -4,6 +4,7 @@ module Restspec
   module Endpoints
     class Endpoint < Struct.new(:name)
       attr_accessor :method, :path, :namespace
+      attr_writer :schema_name
 
       def execute(body: {}, url_params: {}, query_params: {})
         full_url = build_url(url_params, query_params)
@@ -21,11 +22,15 @@ module Restspec
       end
 
       def schema_name
-        namespace.schema_name
+        @schema_name || namespace.schema_name
       end
 
       def schema
         @schema ||= Restspec::Schema::Finder.new.find(schema_name)
+      end
+
+      def full_path
+        "#{namespace.base_path}#{path}"
       end
 
       private
@@ -38,7 +43,7 @@ module Restspec
       end
 
       def path_from_params(url_params)
-        path.gsub(/:([\w]+)/) { url_params[$1] }
+        full_path.gsub(/:([\w]+)/) { url_params[$1] || url_params[$1.to_sym] }
       end
 
       def headers

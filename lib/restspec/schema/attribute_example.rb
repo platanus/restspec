@@ -4,7 +4,7 @@ module Restspec
   module Schema
     class AttributeExample < Struct.new(:attribute)
       def value
-        type.example_for(attribute)
+        attribute.example || type.example_for(attribute)
       end
 
       private

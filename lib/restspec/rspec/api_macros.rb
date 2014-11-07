@@ -44,18 +44,23 @@ module Restspec
         let(:payload) { @payload }
       end
 
-      def url_params
-        before(:context) { @url_params = Restspec::Values::SuperHash.new(yield) }
+      def url_params(params = nil)
+        before(:context) { @url_params = Restspec::Values::SuperHash.new(params || yield) }
         let(:url_params) { @url_params }
       end
 
-      def query_params
-        before(:context) { @query_params = Restspec::Values::SuperHash.new(yield) }
+      def query_params(params = nil)
+        before(:context) { @query_params = Restspec::Values::SuperHash.new(params || yield) }
         let(:query_params) { @query_params }
       end
 
       def schema_example(schema_name, extensions = {})
         Restspec.example_for(schema_name, extensions)
+      end
+
+      def assert_requirement!(name)
+        requirement = Restspec::Requirements::Requirement.find_by_name(name)
+        requirement.assert!
       end
 
       def within_response(&block)

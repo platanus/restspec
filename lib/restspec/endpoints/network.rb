@@ -9,7 +9,7 @@ module Restspec
       end
 
       def do_request(method, url, headers = {}, body = {})
-        HTTParty.send method, url, headers: headers, body: body.to_json
+        HTTParty.send method, url, headers: headers, body: (body || '').to_json
       end
     end
   end
