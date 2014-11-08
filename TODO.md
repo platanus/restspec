@@ -1,4 +1,3 @@
-- Add `call_endpoint` as a internal part of `read_endpoint`
 - Headers to reuse across many endpoints.
 - Add `null` type.
 - `schema_example` macro first argument should default to the endpoint's schema name.
