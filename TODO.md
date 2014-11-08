@@ -1,3 +1,9 @@
+- Generator.
+- Add `call_endpoint` as a internal part of `read_endpoint`
+- Headers to reuse across many endpoints.
+- Add `null` type.
+- `schema_example` macro first argument should default to the endpoint's schema name.
+- Allow binding url and query params to types to get examples. `url_param(:id) { schema_id }`
 - Wrap this pattern:
     
     ```ruby

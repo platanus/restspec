@@ -2,243 +2,387 @@
 
 Test REST APIs using RSpec.
 
-## What is this?
-
-I don't know about you, but i kept writing the same kind of boilerplate every time i was testing an API from RSpec. Not only specific matchers or macros but design patterns too. I tried using some node-based testing frameworks but i missed all the power of object-oriented ruby and metaprogramming. So... i decided to make it easier to test json APIs and i wrote this library.
-
-#### Disclaimer
-It's still a work in progress.
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'restspec'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+## Install
 
     $ gem install restspec
 
+## Create a Test API Project
+
+```
+$ restspec init my-api-tests
+$ cd my-api-tests
+$ tree
+
+.
+├── Gemfile
+├── Gemfile.lock
+└── spec
+    ├── api
+    │   ├── api_endpoints.rb
+    │   ├── api_requirements.rb
+    │   └── api_schemas.rb
+    ├── spec_helper.rb
+    └── support
+        ├── custom_macros.rb
+        └── custom_matchers.rb
+
+```
+
+If you're familiar with the regular use of RSpec, this initial structure should look normal except from the the api_* files in the api folder.
+
+- **api_endpoints.rb**: This is the place to describe your endpoints. One important thing is that your tests **won't define your endpoints**. In this way, we have a graph of the structure of your api *always* and this can help you to visualize your api structure and create better matchers.
+- **api_schemas.rb**: The schemas are the shape of the resources you are manipulating in the api. It's a centralized place to put how your data should be.
+- **api_requirements.rb**: The requirements are validations for the initial state of the api system. Testing that the user you are using exists on the api you are working on, testing that some read-only resources created outside of your control exists, etc.
+
 ## Setup
 
-**Disclaimer:** In the future there will be a kind of generator to generate all the stuff that for now have to be created manually. Sorry for that. This is the next thing in my TODO list :)
-
-After installing the gem, just add the following lines to your `spec_helper` or `rails_helper` or whatever your RSpec helper is called.
-
-At the top of the file:
-
-```ruby
-require 'restspec'
-```
-
-Inside the RSpec configuration block:
-
-```ruby
-config.include Restspec::RSpec::ApiHelpers, :type => :api
-config.extend Restspec::RSpec::ApiMacros, :type => :api
-```
-
-The later two lines adds the helpers, matchers and macros to any test with the `:api` type.
-
-Then, in the end of the RSpec configuration file:
+In the file `rspec_helper.rb` you can setup the basic url to use of your api. Find the `Restspec`'s `configure` block and set the proper url:
 
 ```ruby
 Restspec.configure do |config|
-  config.base_url = 'your.api.url/version'
-  config.schema_definition = "#{File.dirname __FILE__}/api/api_schemas.rb"
-  config.endpoints_definition = "#{File.dirname __FILE__}/api/api_endpoints.rb"
+  config.base_url = 'http://localhost:3001/api/v1'
+  # ...
 end
 ```
 
-These three configurations (`base_url`, `schema_definition` and `endpoints_definition`) and required to make Restspec work. The first one is the api url base we will be testing; the second is where we will define our schemas and the third one is where we will define our endpoints. For now, just create a folder inside your rspec folder called `api` and, inside that folder, creates the two configuration files:
+## Usage
 
-```bash
-$ mkdir -p spec/api
-$ touch spec/api/api_schemas.rb
-$ touch spec/api/api_endpoints.rb
+Anyway, we will add a first test. For this example, we will assume you have a regular api that consists on categories and products. First, we will add a test for the categories endpoints.
+
+    $ touch spec/api/categories_spec.rb
+
+In here, we will create a regular spec with a `describe` block with the `type` option set to `api`. Without the type, you won't get the matchers and macros that `api`-typed specs have.
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  
+end
 ```
 
-Now, you made the work that a generator will do later. Now, write some specs.
+We want to begin testing the endpoint that creates a category. As said when describing the `api_endpoints.rb` file, we need to first define our endpoints in there. So, we will open our `api_endpoints.rb` file and add the following:
 
-## Documentation & Usage
-
-First, you may be wondering about the `api_schemas.rb` file and the `api_endpoints.rb` file. The basic design of Restspec is based in the fact that your schemas and endpoints are not dependant of your tests. In this way, Restspec can provide you with matchers, macros and helpers that know how to manage the dependencies of your models and endpoints, but we will see that later. 
-
-### Schemas
-
-Before writing a spec, we need a definition of an api to test. Let's say that we have an api consisting of two resources: Categories and Products.
-
-```yaml
-  Category: { name }
-  Product: { price, name, category_id }
+```ruby
+namespace :categories do
+  endpoint :create do
+    path '/categories'
+    method :post
+  end
+end
 ```
 
-One of the primary goals of Restspec was to provide a way to run each test independently of another. The problem with testing this simple set of resources is that the products are dependant on categories. Because we divide the schemas and endpoints from the tests, we can specify relationships between schemas and relationships in ways that they reflect this dependency. First, we will make the schemas. Let's write this in the `api_schemas.rb`:
+This creates an endpoint called `:create` that lives in the namespace `:categories`. Another way, more succint of define the same endpoint is to use the methods `resource` and `post`:
+
+```ruby
+resource :categories do
+  post :create
+end
+```
+
+With this, we have our endpoint. To test this endpoint, just modify your `categories_spec.rb` file to add an endpoint declaration:
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+
+  end
+end
+```
+
+One important thing to note is that the endpoint is execute just **once**. All the tests inside the endpoint work against one execution. This is like this to avoid having very slow tests.
+
+Inside the endpoint, we can use the [matchers](TODO) offered by Restspec. For example, we can test that the endpoint  returned `created`(201).
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+    it { should have_status(:created) }
+  end
+end
+```
+
+If we run this test against a properly implemented api, you won't get 201 because you didn't specify a payload for the POST request. To specify a payload, we use the `payload` macro with a hash or a block that returns a hash:
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+    payload name: 'Super Category'
+
+    it { should have_status(:created) }
+  end
+end
+```
+
+Altought this works, it won't scale with more complex structures and you have to decide what the data should be anytime. To help us with this troubles, we will define **schemas**.
+
+Schemas are a representation of your data. They are responsible of two things: schema validation and examples generation. Edit your `api_schemas.rb` file like this:
 
 ```ruby
 schema :category do
   attribute :name, string
 end
+```
 
+This is your first schema and it looks straightforward. The `attribute` method defines an attribute with a name and a type. There are [more types than string](TODO) and they can be composed with other types to express some cases. For example, what if the category's name can be string or `null`?
+
+For those cases, you can use the `|` operator, that acts like an `or` for types:
+
+```ruby
+schema :category do
+  attribute :name, string | null
+end
+```
+
+You can read more about types in [his detailed section](TODO).
+
+With our first schema set, we can just express the payload in the test with the `schema_example` helper:
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+    payload { schema_example :category }
+
+    it { should have_status(:created) }
+  end
+end
+```
+
+And we can test that the response's body obtained is a category using the `be_like_schema` matcher:
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+    payload { schema_example :category }
+
+    it { should have_status(:created) }
+    it { should be_like_schema(:category) }
+  end
+end
+```
+
+
+Because to define the `categories/create` endpoint we used the `resource` method and because the endpoint is called `categories`, the first argument for `schema_example` and `be_like_schema` will default to `:category`, so they are not really needed.
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+    payload { schema_example }
+
+    it { should have_status(:created) }
+    it { should be_like_schema }
+  end
+end
+```
+
+Say that you don't want to test only that the endpoint returned 201, but you want to be sure that the resource was created. First, we need an endpoint for show a category in our `api_endpoints.rb` file:
+
+```ruby
+resource :categories do
+  post :create
+  member do
+    get :show
+  end
+end
+```
+
+Because the `:show` endpoint is under a `member` method, his url is not only `/categories` but `/categories/:id`. In this way, we described a tipical resource endpoint.
+
+We can use a new helper here called `read_endpoint` and use a standard RSpec test to test that the category was really created. We also use the `body` method to get the response's body and the `payload` method to get the payload used.
+
+```ruby
+RSpec.describe :categories_api, :type => :api do
+  endpoint 'categories/create' do
+    payload { schema_example }
+
+    it { should have_status(:created) }
+    it { should be_like_schema }
+
+    it "created a category" do
+      category = read_endpoint('categories/show', url_params: { id: body.id })
+      expect(category.response).to have_status(:ok)
+      expect(category.name).to eq(payload.name)
+    end
+  end
+end
+```
+
+As you can see, you can manipulate endpoint appart from his tests and this is nice because it allows us to use them for things like this.
+
+To test the `categories/show` endpoint, we face a tipical problem of API testing: `categories/show` needs an ID, but that ID depends on the `categories/create` endpoint or `categories/index` if you want to. Anyway, we don't want a callback hell formed from this dependencies. 
+
+A bad but possible solution would be to use the `url_params` macro to set params from reading the `categories/create` endpoint.
+
+```ruby
+endpoint `categories/show` do
+  url_params { { id: read_endpoint('categories/create').id } }
+
+  it { should have_status(:ok) }
+  it { should be_like_schema }
+end
+```
+
+The drawback to this is that we can be putting more crap than needed onto the api database. Wouldn't it be nice if we can try first to get from some place and then, if we can't get from that other place, create something?
+
+In the endpoint, we can define this:
+
+```ruby
+resource :categories do
+  post :create
+  member do
+    url_param(:id) { schema_id(:category) }
+    get :show
+  end
+end
+```
+
+The `url_param` method applies for all the endpoints inside `member` and they tie a url param (`:id`) to an schema type (we could use `integer` to generate a number). In this case we are using a very powerful type called `schema_id`, that generates examples based on the schema that he uses. It searches for endpoints attached to the `category` schema and looks for the endpoints called `index` and `create` to find the specific id. In this way, because the url parameter `:id` is filled by the example, we don't need to specify it. The test could only be like this:
+
+```ruby
+endpoint `categories/show` do
+  it { should have_status(:ok) }
+  it { should be_like_schema }
+end
+```
+
+And that's all. Under the hood, it will try to find the category for the endpoint from his dependencies. `SchemaId` is one example of what the separation between endpoints, schemas and tests can bring to api testing.
+
+Anyway, we now may need a test for `categories/index`. It can be as easy as:
+
+```ruby
+# in the endpoints
+resource :categories do
+  post :create
+  get :index
+
+  member do
+    url_param(:id) { schema_id(:category) }
+    get :show
+  end
+end
+
+# in the test
+endpoint `categories/index` do
+  it { should have_status(:ok) }
+  it { should be_like_schema_array }
+end
+```
+
+We now add tests for the products of the api. The endpoints should be as simple as the ones in `categories` so we will focus in the schemas. Our products have names, so they are simple this:
+
+```ruby
 schema :product do
   attribute :name, string
-  attribute :price, decimal_string({
-    example_options: {
-      integer_part: 5,
-      decimal_part: 2
-    }
-  })
-
-  attribute :category_id, schema_id({
-    fetch_endpoint: 'categories/index',
-    create_endpoint: 'categories/create'
-  })
 end
 ```
 
-The `schema` method allow us to define a set of attributes that conforms a schema. A schema is one of your resources. The main goals of them are:
-
-1. Provide **validations** of what we get from the api.
-2. Provide **examples** of what we should post to the api.
-
-The first schema (`category`) should be pretty easy to understand. The second parameters of `attribute` is a type function that defines how this attribute should be validated and how to provide examples for this attribute.
-
-The second attribute of `product` contains a type that receives a set of options. The `example_options` set is a set of options that helps with examples generation. In this case, we will generate decimals that have 5 integer parts and 2 decimal parts.
-
-A full list of the types we can use is here:
-
-Type | Description | Options
------|------|-------|
-boolean | True or False |
-decimal_string  | Strings that contains decimals. | integer_part, decimal_part
-decimal | Decimals |
-integer | Numbers without decimal points | 
-schema_id | Represent an id related to another schema | fetch_endpoint, create_endpoint, [create_schema, hardcoded_fallback, perform_validation]
-string | Strings |
-
-They will be expanded as more needs arises.
-
-The final attribute on product is important to note:
+The price it's a little bit tricky. Some apis may return a number and some other may return a string with the number. For both cases, we have two types: `decimal` and `decimal_string`. In this case we are going to just be lazy with the API and let the type be one of them.
 
 ```ruby
-attribute :category_id, schema_id({
-  fetch_endpoint: 'categories/index',
-  create_endpoint: 'categories/create'
-})
+schema :product do
+  attribute :name, string
+  attribute :price, decimal | decimal_string
+end
 ```
 
-This says that the `category_id` attribute should be the `id` property of another schema. To specify how to get that `id` we should define an endpoint to fetch that id and what endpoint to use when there is no data in the fetch endpoint.
+It's important to say that the first type in the operation is the one used when creating examples. In this case, the examples will generate a decimal.
 
-To understand correctly how this works, we should explain the endpoints.
-
-### Endpoints
-
-In `api_endpoints.rb`, add the following:
+The last attribute we need to define is the `category_id`. We should be tempted to use an integer but we have something better. A time ago, we talked about the `schema_id` type while defining how to fill the `id` url param of a member endpoint. Well, we can use it here again:
 
 ```ruby
-namespace :categories do
-  schema :category
-
-  endpoint :index do
-    method :get
-    path '/categories'
-  end
-
-  endpoint :create do
-    method :post
-    path '/categories'
-  end
+schema :product do
+  attribute :name, string
+  attribute :price, decimal | decimal_string
+  attribute :category_id, schema_id(:category)
 end
+```
 
-namespace :products do
-  schema :product
+And that's all. `be_like_schema` will try to match the id against one example from the `categories/index` endpoint and `schema_example` will generate a product with an `id` from that same endpoint or will create one using `categories/create`. Actually, this is a very repetitive pattern.
 
-  endpoint :index do
-    method :get
-    path '/products'
+Finally, we will add the tests for the product api. Let's create `product_spec.rb` file and put some tests inside:
+
+```ruby
+RSpec.describe :products_api, :type => :api do
+  endpoint 'products/create' do
+    it { should have_status(:created) }
+    it { should be_like_schema }
+
+    it "created a product" do
+      product = read_endpoint('products/show', url_params: { id: body.id })
+      expect(product.response).to have_status(:ok)
+      expect(product.id).to eq(payload.id)
+    end
   end
 
-  endpoint :create do
-    method :post
-    path '/products'
+  endpoint 'products/show' do
+    it { should have_status(:ok) }
+    it { should be_like_schema }
+  end
+
+  endpoint 'products/index' do
+    it { should have_status(:ok) }
+    it { should be_like_schema_array }
   end
 end
 ```
 
-A namespace is a combination of endpoints that shares a schema. In this case, we are defining a namespace `categories` with the endpoints `index` and `create`. Each individual endpoint define his method and path, so he knows how it will be executed. In the `schema_id` example lines above, we referenced two of this endpoints: `categories/index` and `categories/create`. The slash is a way to indicate a namespaced endpoint.
-
-### Specs
-
-Finally, we'll write a spec for products. The describe block should have the `endpoint` type to get the helpers and macros.
+Now, we are going to add a `products/update` endpoint that should update the product using a `PUT`. This can be something like this:
 
 ```ruby
-require 'spec_helper'
+# api_endpoints.rb
+resource :products do
+  post :create
+  get :index
 
-RSpec.describe 'Products endpoints', :type => :api do
+  member do
+    url_param(:id) { schema_id(:product) }
+    
+    get :show
+    put :update
+  end
 end
-```
 
-Inside this `describe` block, we can make some endpoint tests with the `endpoint` macro. We will use the syntax with slashes to specify which endpoint we are going to test. Then, we are going to test that the status of calling this endpoint is 200 (`OK`)
+# product_spec.rb
+endpoint 'products/update' do
+  payload { schema_example }
 
-```ruby
-endpoint 'products/index' do
-  it { should have_status(:ok) }
-end
-```
+  it { should have_status :ok }
+  it { should be_like_schema }
 
-Note we can use the underscored versions (`:continue`, `:ok`, `:created`, etc) of the [values specified in Rack](https://github.com/rack/rack/blob/575bbcba780d9ba71f173921aa1fcb024890b867/lib/rack/utils.rb#L573) instead of writing the http code numbers.
-
-We can test for the response information itself using the `within_response` macro:
-
-```ruby
-endpoint 'products/index' do
-  it { should have_status(:ok) }
-  within_response do
-    it { should have_at_least(1).item }
+  it "updated the parameters" do
+    product = read_endpoint('products/show', url_params: { id: body.id })
+    expect(product).to include(payload)
   end
 end
 ```
 
-And we can test each one of this responses to be like any schema with this:
+A `delete` endpoint should be something like this:
+
 
 ```ruby
-it 'has all his objects according to the product schema' do
-  subject.each do |product|
-    expect(product).to be_like_schema(:product)
+# api_endpoints.rb
+resource :products do
+  post :create
+  get :index
+
+  member do
+    url_param(:id) { schema_id(:product) }
+    
+    get :show
+    put :update
+    delete :destroy
+  end
+end
+
+# product_spec.rb
+endpoint 'products/destroy' do
+  it { should have_status :no_content }
+
+  it "deleted the product" do
+    get_product = call_endpoint('products/show', url_params: {
+      id: url_params.id
+    })
+    expect(get_product).to have_status(:not_found)
   end
 end
 ```
 
-And because we can't be sure we already have one item to test that 1 item is here, we can use a `before(:all)` hook inside the `endpoint` block to add some elements:
-
-```
-before(:all) do
-  initial_products = read_endpoint
-  if initial_products.size < 3
-    3.times.map { read_endpoint('products/create', body: schema_example(:product)) }
-  end
-end
-```
-
-The method `read_endpoint` reads an endpoint and returns the body of the response of that endpoint. After reading the endpoint, we can just add some new products using the `products/create` endpoint and some product examples obtained using the `schema_example` method.
-
-Note that we didn't add any explicit `category_id` in the spec but the id was inferred from the schema file.
-
-If we want to test a no-GET endpoint, we can make it like this:
-
-```ruby
-endpoint 'products/create' do
-  payload { schema_example(:product) }
-
-  it { should have_status(:created) }
-  it { should be_like_schema(:product) }
-end
-```
-
-We used the `payload` macro to set the request body to a generated example from the `product` schema.
+And that's all for this not-so-quick mini-tutorial usage of Restspec. We can improve more the code but it depends on you in most cases. You can make whatever you want. The most awesome thing about using RSpec is that, If you think that this tests are not DRY enough, you could simply use RSpec's shared examples, macros, helpers and matchers to make tests as concise as you want.

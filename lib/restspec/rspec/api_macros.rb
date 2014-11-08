@@ -25,6 +25,9 @@ module Restspec
             )
           end
 
+          let(:response) { subject }
+          let(:body) { response.body }
+
           instance_eval(&block)
         end
 
