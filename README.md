@@ -36,11 +36,11 @@ If you're familiar with the regular use of RSpec, this initial structure should 
 
 ## Setup
 
-In the file `rspec_helper.rb` you can setup the basic url to use of your api. Find the `Restspec`'s `configure` block and set the proper url:
+In the file `rspec_helper.rb` you can change the basic url to use of your api. Find the `Restspec`'s `configure` block and set the proper url:
 
 ```ruby
 Restspec.configure do |config|
-  config.base_url = 'http://localhost:3001/api/v1'
+  config.base_url = 'http://my-api-domain/api/v2'
   # ...
 end
 ```

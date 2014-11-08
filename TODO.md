@@ -1,4 +1,3 @@
-- Generator.
 - Add `call_endpoint` as a internal part of `read_endpoint`
 - Headers to reuse across many endpoints.
 - Add `null` type.
