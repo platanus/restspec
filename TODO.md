@@ -1,4 +1,3 @@
-- Add `null` type.
 - Headers to reuse across many endpoints.
 - `schema_example` macro first argument should default to the endpoint's schema name.
 - Allow binding url and query params to types to get examples. `url_param(:id) { schema_id }`
