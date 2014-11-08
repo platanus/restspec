@@ -9,7 +9,7 @@ Test REST APIs using RSpec.
 ## Create a Test API Project
 
 ```
-$ restspec init my-api-tests
+$ restspec my-api-tests --api-prefix=http://my-api-domain/api/v1
 $ cd my-api-tests
 $ tree
 

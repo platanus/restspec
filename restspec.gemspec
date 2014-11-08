@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.executables   = ['restspec']
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "httparty", "~> 0.13"
   spec.add_dependency "rspec-its", "~> 1.0"
   spec.add_dependency "rspec-collection_matchers", "~> 1.0"
+  spec.add_dependency "thor", "~> 0.19"
 end
