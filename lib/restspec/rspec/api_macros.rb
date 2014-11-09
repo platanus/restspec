@@ -21,9 +21,9 @@ module Restspec
 
           subject do
             @response = @endpoint.execute_once(
-              body: @payload,
-              url_params: @url_params,
-              query_params: @query_params
+              body: @payload || {},
+              url_params: @url_params || {},
+              query_params: @query_params || {}
             )
           end
 

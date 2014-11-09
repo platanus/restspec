@@ -3,11 +3,12 @@ require 'httparty'
 module Restspec
   module Endpoints
     class Endpoint < Struct.new(:name)
-      attr_accessor :method, :path, :namespace
+      attr_accessor :method, :path, :namespace, :url_params
       attr_writer :schema_name
 
       def execute(body: {}, url_params: {}, query_params: {})
-        full_url = build_url(url_params, query_params)
+        full_url_params = self.url_params.merge(url_params)
+        full_url = build_url(full_url_params, query_params)
         Network.request(method, full_url, full_headers, body).tap do |response|
           response.endpoint = self
         end
@@ -22,7 +23,7 @@ module Restspec
       end
 
       def schema_name
-        @schema_name || namespace.schema_name
+        @schema_name || namespace.actual_schema_name
       end
 
       def schema
@@ -30,11 +31,23 @@ module Restspec
       end
 
       def full_path
-        "#{namespace.base_path}#{path}"
+        if in_member_or_collection?
+          "#{namespace.full_base_path}#{path}"
+        else
+          path
+        end
+      end
+
+      def in_member_or_collection?
+        namespace[:name].blank?
       end
 
       def headers
         @headers ||= {}
+      end
+
+      def url_params
+        @url_params ||= {}
       end
 
       private

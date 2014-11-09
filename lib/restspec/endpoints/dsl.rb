@@ -13,8 +13,7 @@ module Restspec
       end
 
       def resource(name, options = {}, &block)
-        namespace name, options do
-          self.resource_endpoint_base_path = "/#{name}"
+        namespace name, options.merge(base_path: "/#{name}") do
           instance_eval(&block)
 
           if self.namespace.schema_name.blank?
@@ -30,7 +29,6 @@ module Restspec
 
       def initialize(namespace)
         self.namespace = namespace
-        self.endpoint_base_path = ''
         self.resource_endpoint_base_path = ''
       end
 
@@ -39,8 +37,6 @@ module Restspec
         endpoint_dsl = EndpointDSL.new(endpoint)
         endpoint_dsl.instance_eval(&block)
         endpoint_dsl.instance_eval(&common_endpoints_config_block)
-        endpoint.path ||= ''
-        endpoint.path = endpoint_base_path + endpoint.path
         namespace.add_endpoint(endpoint)
       end
 
@@ -53,11 +49,14 @@ module Restspec
         end
       end
 
-      def member(&block)
-        original_base_path = self.endpoint_base_path
-        self.endpoint_base_path += "#{resource_endpoint_base_path}/:id"
-        instance_eval(&block)
-        self.endpoint_base_path = original_base_path
+      def member(options = {}, &block)
+        identifier_name = options[:identifier_name] || 'id'
+
+        member_namespace = Namespace.create('')
+        member_namespace.set_options options.merge(base_path: "/:#{identifier_name}")
+        member_namespace.namespace = namespace
+        member_namespace_dsl = NamespaceDSL.new(member_namespace)
+        member_namespace_dsl.instance_eval(&block)
       end
 
       def collection(&block)
@@ -74,6 +73,14 @@ module Restspec
       def all(&endpoints_config)
         self.common_endpoints_config_block = endpoints_config
       end
+
+      def url_param(param, &value_or_example_block)
+        all do
+          url_param(param, &value_or_example_block)
+        end
+      end
+
+      private
 
       def common_endpoints_config_block
         @common_endpoints_config_block ||= (Proc.new {})
@@ -95,6 +102,13 @@ module Restspec
 
       def headers
         endpoint.headers
+      end
+
+      def url_param(param, &value_or_example_block)
+        endpoint.url_params[param] = begin
+          value_or_example = value_or_example_block.call
+          value_or_example
+        end
       end
 
       HTTP_METHODS.each do |http_method|

@@ -1,7 +1,7 @@
 module Restspec
   module Endpoints
     class Namespace < Struct.new(:name)
-      attr_accessor :schema_name, :base_path
+      attr_accessor :schema_name, :base_path, :namespace
 
       def add_endpoint(endpoint)
         endpoints << endpoint.tap do |endpoint|
@@ -17,14 +17,40 @@ module Restspec
         @endpoints ||= []
       end
 
-      def base_path
-        @base_path ||= ''
-      end
-
       def get_endpoint(endpoint_name)
         endpoints.find do |endpoint|
           endpoint.name = endpoint_name
         end
+      end
+
+      def top_level_namespace?
+        namespace.nil?
+      end
+
+      def full_base_path
+        if top_level_namespace?
+          base_path
+        else
+          namespace.full_base_path + base_path
+        end
+      end
+
+      def actual_schema_name
+        schema_name || namespace.try(:schema_name)
+      end
+
+      def name
+        if top_level_namespace?
+          self[:name]
+        else
+          [namespace.name, self[:name]].reject(&:blank?).join('/')
+        end
+      end
+
+      private
+
+      def base_path
+        @base_path ||= ''
       end
     end
 
