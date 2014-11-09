@@ -19,7 +19,7 @@ module Restspec
 
       def get_endpoint(endpoint_name)
         endpoints.find do |endpoint|
-          endpoint.name = endpoint_name
+          endpoint.name == endpoint_name
         end
       end
 

@@ -14,12 +14,12 @@ module Restspec
 
       def resource(name, options = {}, &block)
         namespace name, options.merge(base_path: "/#{name}") do
-          instance_eval(&block)
-
           if self.namespace.schema_name.blank?
             schema_name = name.to_s.singularize
             schema(schema_name.to_sym)
           end
+
+          instance_eval(&block)
         end
       end
     end
@@ -35,9 +35,9 @@ module Restspec
       def endpoint(name, &block)
         endpoint = Endpoint.new(name)
         endpoint_dsl = EndpointDSL.new(endpoint)
+        namespace.add_endpoint(endpoint)
         endpoint_dsl.instance_eval(&block)
         endpoint_dsl.instance_eval(&common_endpoints_config_block)
-        namespace.add_endpoint(endpoint)
       end
 
       HTTP_METHODS.each do |http_method|
@@ -104,10 +104,17 @@ module Restspec
         endpoint.headers
       end
 
-      def url_param(param, &value_or_example_block)
-        endpoint.url_params[param] = begin
-          value_or_example = value_or_example_block.call
-          value_or_example
+      def url_param(param, &value_or_type_block)
+        endpoint.url_params[param] = Proc.new do
+          value_or_type_context = ValueOrTypeContext.new
+          value_or_type = value_or_type_context.instance_eval(&value_or_type_block)
+          
+          if value_or_type.is_a?(Restspec::Schema::Types::BasicType)
+            attribute = endpoint.schema.attributes[param]
+            value_or_type.example_for(attribute)
+          else
+            value_or_type
+          end
         end
       end
 
@@ -115,6 +122,14 @@ module Restspec
         define_method(http_method) do |path|
           self.method http_method
           self.path path
+        end
+      end
+    end
+
+    class ValueOrTypeContext
+      Restspec::Schema::Types::ALL.each do |type_name, type_class|
+        define_method(type_name) do |options = {}|
+          type_class.new(options)
         end
       end
     end

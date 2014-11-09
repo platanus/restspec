@@ -1,6 +1,5 @@
 # Needed to 0.1
 
-- Allow binding url and query params to types to get examples. `url_param(:id) { schema_id }`
 - Wrap this pattern:
     
     ```ruby

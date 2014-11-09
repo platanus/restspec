@@ -60,7 +60,15 @@ module Restspec
       end
 
       def path_from_params(url_params)
-        full_path.gsub(/:([\w]+)/) { url_params[$1] || url_params[$1.to_sym] }
+        full_path.gsub(/:([\w]+)/) do
+          param_value = url_params[$1] || url_params[$1.to_sym]
+          
+          if param_value.is_a?(Proc)
+            param_value.call
+          else
+            param_value
+          end
+        end
       end
 
       def full_headers
