@@ -7,6 +7,8 @@ module Restspec
         endpoint = Restspec::Endpoints::Namespace.create_by_full_name(name)
         context_message = context
 
+        self.metadata[:current_endpoint] = endpoint
+
         # Instance variables in the example context
         #   - @namespace
         #   - @endpoint
@@ -57,7 +59,11 @@ module Restspec
         let(:query_params) { @query_params }
       end
 
-      def schema_example(schema_name, extensions = {})
+      def schema_example(schema_name = nil, extensions = {})
+        if schema_name.nil? && metadata[:current_endpoint]
+          schema_name = metadata[:current_endpoint].schema_name
+        end
+        
         Restspec.example_for(schema_name, extensions)
       end
 
