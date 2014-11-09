@@ -8,7 +8,7 @@ module Restspec
 
       def execute(body: {}, url_params: {}, query_params: {})
         full_url = build_url(url_params, query_params)
-        Network.request(method, full_url, headers, body).tap do |response|
+        Network.request(method, full_url, full_headers, body).tap do |response|
           response.endpoint = self
         end
       end
@@ -33,6 +33,10 @@ module Restspec
         "#{namespace.base_path}#{path}"
       end
 
+      def headers
+        @headers ||= {}
+      end
+
       private
 
       def build_url(url_params, query_params)
@@ -46,7 +50,11 @@ module Restspec
         full_path.gsub(/:([\w]+)/) { url_params[$1] || url_params[$1.to_sym] }
       end
 
-      def headers
+      def full_headers
+        config_headers.merge(headers)
+      end
+
+      def config_headers
         Restspec.config.request.headers
       end
 

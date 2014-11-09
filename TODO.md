@@ -1,4 +1,5 @@
-- Refactor endpoints/namespace/resource structures to be more like a tree.
+# Needed to 0.1
+
 - Headers to reuse across many endpoints.
 - `schema_example` macro first argument should default to the endpoint's schema name.
 - Allow binding url and query params to types to get examples. `url_param(:id) { schema_id }`
@@ -25,3 +26,10 @@
 - Research authentication strategies.
 - Research pagination strategies and integrating them with `schema_id`.
 - Find a way to modify the schema by endpoint.
+
+# Useful to Have (But they require more thoughts)
+- `payload` will default to `schema_example` if not given based on the resource. (Maybe this should be optional)
+- Refactor endpoints/namespace/resource structures to be more like a tree.
+
+# Pre-release Tasks
+- Add tests for all the classes.

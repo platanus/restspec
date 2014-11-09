@@ -26,7 +26,7 @@ module Restspec
     end
 
     class NamespaceDSL
-      attr_accessor :namespace, :endpoint_base_path, :resource_endpoint_base_path
+      attr_accessor :namespace, :endpoint_base_path, :resource_endpoint_base_path, :common_endpoints_config_block
 
       def initialize(namespace)
         self.namespace = namespace
@@ -38,6 +38,7 @@ module Restspec
         endpoint = Endpoint.new(name)
         endpoint_dsl = EndpointDSL.new(endpoint)
         endpoint_dsl.instance_eval(&block)
+        endpoint_dsl.instance_eval(&common_endpoints_config_block)
         endpoint.path ||= ''
         endpoint.path = endpoint_base_path + endpoint.path
         namespace.add_endpoint(endpoint)
@@ -69,6 +70,14 @@ module Restspec
       def schema(name)
         namespace.schema_name = name
       end
+
+      def all(&endpoints_config)
+        self.common_endpoints_config_block = endpoints_config
+      end
+
+      def common_endpoints_config_block
+        @common_endpoints_config_block ||= (Proc.new {})
+      end
     end
 
     class EndpointDSL < Struct.new(:endpoint)
@@ -82,6 +91,10 @@ module Restspec
 
       def schema(name)
         endpoint.schema_name = name
+      end
+
+      def headers
+        endpoint.headers
       end
 
       HTTP_METHODS.each do |http_method|
