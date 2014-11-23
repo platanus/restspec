@@ -6,7 +6,9 @@ Test REST APIs using the power of Ruby and RSpec.
 
     $ gem install restspec
 
-## Create a Test API Project
+## Getting Started
+
+### Create a Test API Project
 
 ```
 $ restspec my-api-tests --api-prefix=http://my-api-domain/api/v1
@@ -21,7 +23,8 @@ $ tree
     │   └── restspec
     │       ├── api_endpoints.rb
     │       ├── api_requirements.rb
-    │       └── api_schemas.rb
+    │       ├── api_schemas.rb
+    │       └── restspec_config.rb
     ├── spec_helper.rb
     └── support
         ├── custom_macros.rb
@@ -29,15 +32,16 @@ $ tree
 
 ```
 
-If you're familiar with the regular use of RSpec, this initial structure should look normal except from the the api_* files in the `api/restspec` folder.
+If you're familiar with the regular use of RSpec, this initial structure should look normal except from the the files in the `api/restspec` folder.
 
 - **api_endpoints.rb**: This is the place to describe your endpoints. One important thing is that your tests **won't define your endpoints**. In this way, we have a graph of the structure of your api *always* and this can help you to visualize your api structure and create better matchers.
 - **api_schemas.rb**: The schemas are the shape of the resources you are manipulating in the api. It's a centralized place to put how your data should be.
 - **api_requirements.rb**: The requirements are validations for the initial state of the api system. Testing that the user you are using exists on the api you are working on, testing that some read-only resources created outside of your control exists, etc.
+- **restspec_config.rb**: This is where the configuration for Restspec resides. Here we will put some important things like headers that live in all the application and the url of the API to test.
 
-## Setup
+### Setup
 
-In the file `rspec_helper.rb` you can change the basic url to use of your api. Find the `Restspec`'s `configure` block and set the proper url:
+In the file `restspec_config.rb` you can change the basic url to use your api. Find the `Restspec`'s `configure` block and set the proper url:
 
 ```ruby
 Restspec.configure do |config|
@@ -46,7 +50,7 @@ Restspec.configure do |config|
 end
 ```
 
-## Usage
+### Usage
 
 Anyway, we will add a first test. For this example, we will assume you have a regular api that consists on categories and products. First, we will add a test for the categories endpoints.
 
@@ -79,36 +83,52 @@ resource :categories do
 end
 ```
 
-With this, we have our endpoint. To test this endpoint, just modify your `categories_spec.rb` file to add an endpoint declaration:
+With this, we have our endpoint. To test this endpoint, just modify your `categories_spec.rb` file to add an endpoint declaration with a `test` block inside it:
 
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-
+    test do
+    end
   end
 end
 ```
 
-One important thing to note is that the endpoint is execute just **once**. All the tests inside the endpoint work against one execution. This is like this to avoid having very slow tests.
+One important thing to note is that the endpoint is, under the hood, just a `describe` block attached to the endpoint object we just created before. The `test` method is like a context that executes the endpoint just **once** per `test` declaration, regardless of how many examples we have inside it.
 
-Inside the endpoint, we can use the [matchers](TODO) offered by Restspec. For example, we can test that the endpoint  returned `created`(201).
+Inside the test, we can use the [matchers](TODO) offered by Restspec. For example, we can test that the endpoint  returned `created`(201).
 
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-    it { should have_status(:created) }
+    test do
+      it { should have_status(:created) }
+    end
   end
 end
 ```
+
+The output will be something like this:
+
+```
+categories_api
+  [POST create]
+    the happy path
+      should have status :created
+```
+
+This is: A `test` declaration without a name is considered the *happy path*. Any other `test` block should behave like a context responsible for test another path.
 
 If we run this test against a properly implemented api, you won't get 201 because you didn't specify a payload for the POST request. To specify a payload, we use the `payload` macro with a hash or a block that returns a hash:
 
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-    payload name: 'Super Category'
+    test do
+      payload name: 'Super Category'
 
-    it { should have_status(:created) }
+      it { should have_status(:created) }
+    end
   end
 end
 ```
@@ -140,9 +160,11 @@ With our first schema set, we can just express the payload in the test with the 
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-    payload { schema_example :category }
+    test do
+      payload { schema_example :category }
 
-    it { should have_status(:created) }
+      it { should have_status(:created) }
+    end
   end
 end
 ```
@@ -152,29 +174,33 @@ And we can test that the response's body obtained is a category using the `be_li
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-    payload { schema_example :category }
+    test do
+      payload { schema_example :category }
 
-    it { should have_status(:created) }
-    it { should be_like_schema(:category) }
+      it { should have_status(:created) }
+      it { should be_like_schema(:category) }
+    end
   end
 end
 ```
 
 
-Because to define the `categories/create` endpoint we used the `resource` method and because the endpoint is called `categories`, the first argument for `schema_example` and `be_like_schema` will default to `:category`, so they are not really needed.
+Because to define the `categories/create` endpoint we used the `resource` method and because the endpoint is called `categories`, the first argument for `schema_example` and `be_like_schema` will default to `:category`, so it's not really needed.
 
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-    payload { schema_example }
+    test do
+      payload { schema_example :category }
 
-    it { should have_status(:created) }
-    it { should be_like_schema }
+      it { should have_status(:created) }
+      it { should be_like_schema }
+    end
   end
 end
 ```
 
-Say that you don't want to test only that the endpoint returned 201, but you want to be sure that the resource was created. First, we need an endpoint for show a category in our `api_endpoints.rb` file:
+Say that you don't want to test only that the endpoint returned 201, but you want to be sure that the resource was *really* created. First, we need an endpoint to show a category in our `api_endpoints.rb` file:
 
 ```ruby
 resource :categories do
@@ -185,28 +211,30 @@ resource :categories do
 end
 ```
 
-Because the `:show` endpoint is under a `member` method, his url is not only `/categories` but `/categories/:id`. In this way, we described a tipical resource endpoint.
+Because the `:show` endpoint is under a `member` declaration, his url is not only `/categories` but `/categories/:id`. In this way, we described a tipical resource endpoint.
 
 We can use a new helper here called `read_endpoint` and use a standard RSpec test to test that the category was really created. We also use the `body` method to get the response's body and the `payload` method to get the payload used.
 
 ```ruby
 RSpec.describe :categories_api, :type => :api do
   endpoint 'categories/create' do
-    payload { schema_example }
+    test do
+      payload { schema_example }
 
-    it { should have_status(:created) }
-    it { should be_like_schema }
+      it { should have_status(:created) }
+      it { should be_like_schema }
 
-    it "created a category" do
-      category = read_endpoint('categories/show', url_params: { id: body.id })
-      expect(category.response).to have_status(:ok)
-      expect(category.name).to eq(payload.name)
+      it "created a category" do
+        category = read_endpoint('categories/show', url_params: { id: body.id })
+        expect(category.response).to have_status(:ok)
+        expect(category.name).to eq(payload.name)
+      end
     end
   end
 end
 ```
 
-As you can see, you can manipulate endpoint appart from his tests and this is nice because it allows us to use them for things like this.
+As you can see, you can manipulate endpoints appart from his tests and this is nice because it allows us to use them for things like we have done before.
 
 To test the `categories/show` endpoint, we face a tipical problem of API testing: `categories/show` needs an ID, but that ID depends on the `categories/create` endpoint or `categories/index` if you want to. Anyway, we don't want a callback hell formed from this dependencies. 
 
@@ -216,8 +244,10 @@ A bad but possible solution would be to use the `url_params` macro to set params
 endpoint `categories/show` do
   url_params { { id: read_endpoint('categories/create').id } }
 
-  it { should have_status(:ok) }
-  it { should be_like_schema }
+  test do
+    it { should have_status(:ok) }
+    it { should be_like_schema }
+  end
 end
 ```
 
@@ -262,12 +292,14 @@ end
 
 # in the test
 endpoint `categories/index` do
-  it { should have_status(:ok) }
-  it { should be_like_schema_array }
+  test do
+    it { should have_status(:ok) }
+    it { should be_like_schema_array }
+  end
 end
 ```
 
-We now add tests for the products of the api. The endpoints should be as simple as the ones in `categories` so we will focus in the schemas. Our products have names, so they are simple this:
+Now, we should add tests for the products of the api. The endpoints should be as simple as the ones in `categories` so we will focus in the schemas. Our products have names, so they are simply like this:
 
 ```ruby
 schema :product do
@@ -275,7 +307,7 @@ schema :product do
 end
 ```
 
-The price it's a little bit tricky. Some apis may return a number and some other may return a string with the number. For both cases, we have two types: `decimal` and `decimal_string`. In this case we are going to just be lazy with the API and let the type be one of them.
+The price usually it's a little bit tricky. Some apis may return a number and some other may return a string with the number. For both cases, we have two types: `decimal` and `decimal_string`. In this case we are going to just be lazy with the API and let the type be one of them.
 
 ```ruby
 schema :product do
@@ -303,24 +335,30 @@ Finally, we will add the tests for the product api. Let's create `product_spec.r
 ```ruby
 RSpec.describe :products_api, :type => :api do
   endpoint 'products/create' do
-    it { should have_status(:created) }
-    it { should be_like_schema }
+    test do
+      it { should have_status(:created) }
+      it { should be_like_schema }
 
-    it "created a product" do
-      product = read_endpoint('products/show', url_params: { id: body.id })
-      expect(product.response).to have_status(:ok)
-      expect(product.id).to eq(payload.id)
+      it "created a product" do
+        product = read_endpoint('products/show', url_params: { id: body.id })
+        expect(product.response).to have_status(:ok)
+        expect(product.id).to eq(payload.id)
+      end
     end
   end
 
   endpoint 'products/show' do
-    it { should have_status(:ok) }
-    it { should be_like_schema }
+    test do
+      it { should have_status(:ok) }
+      it { should be_like_schema }
+    end
   end
 
   endpoint 'products/index' do
-    it { should have_status(:ok) }
-    it { should be_like_schema_array }
+    test do
+      it { should have_status(:ok) }
+      it { should be_like_schema_array }
+    end
   end
 end
 ```
@@ -343,14 +381,16 @@ end
 
 # product_spec.rb
 endpoint 'products/update' do
-  payload { schema_example }
+  test do
+    payload { schema_example }
 
-  it { should have_status :ok }
-  it { should be_like_schema }
+    it { should have_status :ok }
+    it { should be_like_schema }
 
-  it "updated the parameters" do
-    product = read_endpoint('products/show', url_params: { id: body.id })
-    expect(product).to include(payload)
+    it "updated the parameters" do
+      product = read_endpoint('products/show', url_params: { id: body.id })
+      expect(product).to include(payload)
+    end
   end
 end
 ```
@@ -375,15 +415,17 @@ end
 
 # product_spec.rb
 endpoint 'products/destroy' do
-  it { should have_status :no_content }
+  test do
+    it { should have_status :no_content }
 
-  it "deleted the product" do
-    get_product = call_endpoint('products/show', url_params: {
-      id: url_params.id
-    })
-    expect(get_product).to have_status(:not_found)
+    it "deleted the product" do
+      get_product = call_endpoint('products/show', url_params: {
+        id: url_params.id
+      })
+      expect(get_product).to have_status(:not_found)
+    end
   end
 end
 ```
 
-And that's all for this not-so-quick mini-tutorial usage of Restspec. We can improve more the code but it depends on you in most cases. You can make whatever you want. The most awesome thing about using RSpec is that, If you think that this tests are not DRY enough, you could simply use RSpec's shared examples, macros, helpers and matchers to make tests as concise as you want.
+And that's all for this not-so-quick mini-tutorial about the usage of Restspec. We can improve more the code but it depends on you in most cases. You can make whatever you want. The most awesome thing about using RSpec is that, if you think that this tests are not DRY enough, you could simply use RSpec's shared examples, macros, helpers and matchers to make tests as concise as you want.

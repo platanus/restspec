@@ -31,6 +31,10 @@ class RestspecRunner < Thor::Group
     template 'templates/spec_helper.rb', "#{project}/spec/spec_helper.rb"
   end
 
+  def create_rspec_config
+    template 'templates/restspec_config.rb', "#{project}/spec/api/restspec/restspec_config.rb"
+  end
+
   def create_api_dsl_files
     create_file "#{project}/spec/api/restspec/api_endpoints.rb"
     create_file "#{project}/spec/api/restspec/api_schemas.rb"
