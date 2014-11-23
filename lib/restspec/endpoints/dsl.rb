@@ -105,7 +105,7 @@ module Restspec
       end
 
       def url_param(param, &value_or_type_block)
-        endpoint.url_params[param] = Proc.new do
+        endpoint.raw_url_params[param] = Proc.new do
           value_or_type_context = ValueOrTypeContext.new
           value_or_type = value_or_type_context.instance_eval(&value_or_type_block)
           

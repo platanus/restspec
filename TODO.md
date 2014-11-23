@@ -1,4 +1,6 @@
 # Needed for 0.1
+- Add tests for all the classes.
+- Rails generator
 
 # Useful to Have (But they require more thoughts)
 - `payload` will default to `schema_example` if not given based on the resource. (Maybe this should be optional)
@@ -21,6 +23,3 @@
     ```ruby
     ensure_records 3
     ```
-
-# Pre-release Tasks
-- Add tests for all the classes.

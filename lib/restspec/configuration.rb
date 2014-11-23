@@ -10,6 +10,8 @@ module Restspec
       config.request.headers['Content-Type'] = 'application/json'
       config.request.headers['Accept'] = 'application/json'
 
+      config.custom = OpenStruct.new
+
       yield config
 
       load_schema_definition if config.schema_definition.present?

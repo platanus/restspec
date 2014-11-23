@@ -1,6 +1,6 @@
 # Restspec
 
-Test REST APIs using RSpec.
+Test REST APIs using the power of Ruby and RSpec.
 
 ## Install
 
@@ -18,9 +18,10 @@ $ tree
 ├── Gemfile.lock
 └── spec
     ├── api
-    │   ├── api_endpoints.rb
-    │   ├── api_requirements.rb
-    │   └── api_schemas.rb
+    │   └── restspec
+    │       ├── api_endpoints.rb
+    │       ├── api_requirements.rb
+    │       └── api_schemas.rb
     ├── spec_helper.rb
     └── support
         ├── custom_macros.rb
@@ -28,7 +29,7 @@ $ tree
 
 ```
 
-If you're familiar with the regular use of RSpec, this initial structure should look normal except from the the api_* files in the api folder.
+If you're familiar with the regular use of RSpec, this initial structure should look normal except from the the api_* files in the `api/restspec` folder.
 
 - **api_endpoints.rb**: This is the place to describe your endpoints. One important thing is that your tests **won't define your endpoints**. In this way, we have a graph of the structure of your api *always* and this can help you to visualize your api structure and create better matchers.
 - **api_schemas.rb**: The schemas are the shape of the resources you are manipulating in the api. It's a centralized place to put how your data should be.

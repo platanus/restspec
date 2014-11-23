@@ -32,9 +32,9 @@ class RestspecRunner < Thor::Group
   end
 
   def create_api_dsl_files
-    create_file "#{project}/spec/api/api_endpoints.rb"
-    create_file "#{project}/spec/api/api_schemas.rb"
-    create_file "#{project}/spec/api/api_requirements.rb"
+    create_file "#{project}/spec/api/restspec/api_endpoints.rb"
+    create_file "#{project}/spec/api/restspec/api_schemas.rb"
+    create_file "#{project}/spec/api/restspec/api_requirements.rb"
   end
 
   def create_support_files

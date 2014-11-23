@@ -3,13 +3,16 @@ require 'httparty'
 module Restspec
   module Endpoints
     class Endpoint < Struct.new(:name)
-      attr_accessor :method, :path, :namespace, :url_params
+      attr_accessor :method, :path, :namespace, :raw_url_params
       attr_writer :schema_name
+      attr_reader :executed_url
 
       def execute(body: {}, url_params: {}, query_params: {})
         full_url_params = self.url_params.merge(url_params)
         full_url = build_url(full_url_params, query_params)
+
         Network.request(method, full_url, full_headers, body).tap do |response|
+          self.executed_url = full_url
           response.endpoint = self
         end
       end
@@ -20,6 +23,10 @@ module Restspec
 
       def execute_once(body: {}, url_params: {}, query_params: {})
         @saved_execution ||= execute(body: body, url_params: url_params, query_params: query_params)
+      end
+
+      def reset!
+        @saved_execution = nil
       end
 
       def schema_name
@@ -47,27 +54,39 @@ module Restspec
       end
 
       def url_params
-        @url_params ||= {}
+        @url_params ||= Restspec::Values::SuperHash.new(calculate_url_params)
+      end
+
+      def raw_url_params
+        @raw_url_params ||= Restspec::Values::SuperHash.new
       end
 
       private
 
-      def build_url(url_params, query_params)
+      attr_writer :executed_url
+
+      def calculate_url_params
+        raw_url_params.inject({}) do |hash, (key, value)|
+          real_value = if value.respond_to?(:call)
+            value.call
+          else
+            value
+          end
+
+          hash.merge(key => real_value)
+        end
+      end
+
+      def build_url(full_url_params, query_params)
         query_string = query_params.to_param
         full_query_string = query_string ? "?#{query_string}" : ""
 
-        base_url + path_from_params(url_params) + full_query_string
+        base_url + path_from_params(full_url_params) + full_query_string
       end
 
       def path_from_params(url_params)
         full_path.gsub(/:([\w]+)/) do
-          param_value = url_params[$1] || url_params[$1.to_sym]
-          
-          if param_value.is_a?(Proc)
-            param_value.call
-          else
-            param_value
-          end
+          url_params[$1] || url_params[$1.to_sym]
         end
       end
 

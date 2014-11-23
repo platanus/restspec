@@ -5,8 +5,9 @@ module Restspec
     class Response < SimpleDelegator
       attr_accessor :endpoint
 
-      def inspect
-        "[#{endpoint.method} to #{endpoint.path}]"
+      def to_s
+        url = endpoint.executed_url || endpoint.full_path
+        "[#{endpoint.method.upcase} to #{url}]"
       end
 
       def read_body(parsed_body = parsed_body)

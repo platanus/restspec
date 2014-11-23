@@ -25,9 +25,14 @@ module Restspec
         endpoint.execute(body: body, url_params: url_params, query_params: query_params)
       end
 
+      def execute_endpoint!
+        endpoint.reset!
+        response
+      end
+
       def schema_example(schema_name = nil)
-        if schema_name.nil? && @endpoint
-          schema_name = @endpoint.schema_name
+        if schema_name.nil? && endpoint.present?
+          schema_name = endpoint.schema_name
         end
 
         Restspec.example_for(schema_name)
