@@ -23,6 +23,10 @@ module Restspec
         end
       end
 
+      def add_error(error)
+        errors << error
+      end
+
       private
 
       attr_writer :name, :errors

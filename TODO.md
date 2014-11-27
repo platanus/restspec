@@ -1,5 +1,6 @@
 # Needed for 0.1
 - Add tests for all the classes.
+- Search a new name for `assert_requirements!` and refactor requirements stuff.
 
 # Needed for 0.2
 - Rails generator

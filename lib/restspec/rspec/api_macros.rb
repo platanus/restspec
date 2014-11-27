@@ -71,7 +71,7 @@ module Restspec
         Restspec.example_for(schema_name, extensions)
       end
 
-      def assert_requirement!(name)
+      def ensure!(name)
         requirement = Restspec::Requirements::Requirement.find_by_name(name)
         requirement.assert!
       end

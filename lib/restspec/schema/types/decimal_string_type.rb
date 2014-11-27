@@ -1,10 +1,7 @@
 module Restspec::Schema::Types
-  class DecimalStringType < BasicType
+  class DecimalStringType < DecimalType
     def example_for(attribute)
-      integer_part = example_options.fetch(:integer_part, 2)
-      decimal_part = example_options.fetch(:decimal_part, 2)
-
-      Faker::Number.decimal(integer_part, decimal_part).to_s
+      super(attribute).to_s
     end
 
     def valid?(attribute, value)
