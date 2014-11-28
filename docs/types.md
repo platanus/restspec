@@ -4,8 +4,8 @@
 
 - It uses the method `array`.
 - It tests if the current attribute value is an array.
-- Currently, it generates an empty array. (We should think further if they should generate more than this.)
-- It doesn't use any option.
+- Currently, it generates an array depending on the length option and the parameterized type (specified with `of`) being used.
+- It only has the `length` option, that is fixed number.
 - It can be composed of other types using `of`. With `of`, it can test the content of the array more deeply.
 
     ```ruby
