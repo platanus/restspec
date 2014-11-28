@@ -4,7 +4,7 @@ module Restspec
   module RSpec
     module ApiMacros
       def endpoint(name, implicit_test: false, &block)
-        endpoint = Restspec::Endpoints::Namespace.create_by_full_name(name)
+        endpoint = Restspec::Endpoints::Namespace.create_endpoint_by_full_name(name)
 
         self.metadata[:current_endpoint] = endpoint
 
@@ -18,11 +18,17 @@ module Restspec
           let(:endpoint) { self.class.metadata[:current_endpoint].clone }
 
           let(:response) do
-            @response = endpoint.execute_once(
-              body: payload.merge(@payload || {}),
-              url_params: url_params.merge(@url_params || {}),
-              query_params: query_params.merge(@query_params || {})
-            )
+            @response = execute_endpoint_lambda.call
+          end
+
+          let(:execute_endpoint_lambda) do
+            -> do
+              endpoint.execute(
+                body: payload.merge(@payload || {}),
+                url_params: url_params.merge(@url_params || {}),
+                query_params: query_params.merge(@query_params || {})
+              )
+            end
           end
 
           let(:body) { response.body }

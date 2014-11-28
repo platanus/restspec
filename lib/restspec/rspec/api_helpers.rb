@@ -12,7 +12,7 @@ module Restspec
                                             query_params: {},
                                             merge_example_params: true)
         endpoint = if endpoint_full_name.present?
-          Restspec::Endpoints::Namespace.get_by_full_name(endpoint_full_name)
+          Restspec::Endpoints::Namespace.endpoint_by_full_name(endpoint_full_name)
         else
           @endpoint
         end
@@ -26,7 +26,7 @@ module Restspec
       end
 
       def execute_endpoint!
-        endpoint.reset!
+        execute_endpoint_lambda.call
         response
       end
 

@@ -33,7 +33,7 @@ module Restspec::Schema::Types
     private
 
     def find_endpoint(name)
-      Restspec::Endpoints::Namespace.get_by_full_name(name)
+      Restspec::Endpoints::Namespace.endpoint_by_full_name(name)
     end
 
     def sample_item

@@ -67,14 +67,18 @@ module Restspec
         end
       end
 
-      def get_by_full_name(full_name)
+      def endpoint_by_full_name(full_name)
         endpoints.find do |endpoint|
           endpoint.full_name == full_name
         end
       end
 
-      def create_by_full_name(full_name)
-        get_by_full_name(full_name).dup
+      def create_endpoint_by_full_name(full_name)
+        endpoint_by_full_name(full_name).dup
+      end
+
+      def create_anonymous
+        create('')
       end
 
       def get_by_schema_name(schema_name)

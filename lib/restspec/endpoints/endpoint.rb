@@ -18,15 +18,7 @@ module Restspec
       end
 
       def full_name
-        "#{namespace.name}/#{name}"
-      end
-
-      def execute_once(body: {}, url_params: {}, query_params: {})
-        @saved_execution ||= execute(body: body, url_params: url_params, query_params: query_params)
-      end
-
-      def reset!
-        @saved_execution = nil
+        [namespace.try(:name), name].compact.join("/")
       end
 
       def schema_name
@@ -38,15 +30,11 @@ module Restspec
       end
 
       def full_path
-        if in_member_or_collection?
+        if namespace && in_member_or_collection?
           "#{namespace.full_base_path}#{path}"
         else
           path
         end
-      end
-
-      def in_member_or_collection?
-        namespace[:name].blank?
       end
 
       def headers
@@ -57,13 +45,21 @@ module Restspec
         @url_params ||= Restspec::Values::SuperHash.new(calculate_url_params)
       end
 
-      def raw_url_params
-        @raw_url_params ||= Restspec::Values::SuperHash.new
+      def add_url_param_block(param, &block)
+        raw_url_params[param] = Proc.new(&block)
       end
 
       private
 
       attr_writer :executed_url
+
+      def raw_url_params
+        @raw_url_params ||= Restspec::Values::SuperHash.new
+      end
+
+      def in_member_or_collection?
+        namespace[:name].blank?
+      end
 
       def calculate_url_params
         raw_url_params.inject({}) do |hash, (key, value)|
@@ -99,11 +95,7 @@ module Restspec
       end
 
       def base_url
-        @base_url ||= detect_base_url
-      end
-
-      def detect_base_url
-        Restspec.config.base_url
+        @base_url ||= Restspec.config.base_url
       end
     end
   end
