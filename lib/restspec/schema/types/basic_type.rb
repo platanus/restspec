@@ -1,20 +1,7 @@
 class Restspec::Schema::Types::BasicType
-  attr_accessor :options
-
   def initialize(options = {})
     self.options = options
   end
-
-  def example_options
-    options.fetch(:example_options, options)
-  end
-
-  def schema_options
-    options.fetch(:schema_options, options)
-  end
-
-  # Type Algebra
-  attr_accessor :disjuction, :parameterized_type
 
   def |(other_type)
     self.disjuction = other_type
@@ -32,5 +19,17 @@ class Restspec::Schema::Types::BasicType
     else
       valid?(attribute, value)
     end
+  end
+
+  private
+
+  attr_accessor :options, :disjuction, :parameterized_type
+
+  def example_options
+    options.fetch(:example_options, options)
+  end
+
+  def schema_options
+    options.fetch(:schema_options, options)
   end
 end
