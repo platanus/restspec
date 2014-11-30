@@ -10,6 +10,8 @@ require "restspec/values/status_code"
 require "restspec/values/super_hash"
 
 require "restspec/configuration"
+require "restspec/stores/endpoint_store"
+require "restspec/stores/schema_store"
 require "restspec/dsl_definitions"
 
 require "restspec/schema/checker"

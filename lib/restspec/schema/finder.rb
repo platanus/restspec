@@ -2,13 +2,13 @@ module Restspec
   module Schema
     class Finder
       def find(name)
-        schemas.fetch(name)
+        schema_store.get(name)
       end
 
       private
 
-      def schemas
-        Restspec.schema_dsl.schemas || {}
+      def schema_store
+        Restspec::SchemaStore
       end
     end
   end

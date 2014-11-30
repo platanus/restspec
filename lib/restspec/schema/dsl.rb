@@ -3,19 +3,11 @@ module Restspec
     class DSL
       attr_reader :schemas
 
-      def initialize
-        self.schemas = {}
-      end
-
       def schema(name, &definition)
         dsl = SingleSchemaDSL.new(name)
         dsl.instance_eval(&definition)
-        schemas[name] = dsl.schema
+        Restspec::SchemaStore.store(dsl.schema)
       end
-
-      private
-
-      attr_writer :schemas
     end
 
     class SingleSchemaDSL
