@@ -1,6 +1,6 @@
 # Restspec
 
-Test REST APIs using the power of Ruby and RSpec.
+Test any REST API using the power of Ruby and RSpec.
 
 ## Install
 
