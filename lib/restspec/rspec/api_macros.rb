@@ -4,7 +4,8 @@ module Restspec
   module RSpec
     module ApiMacros
       def endpoint(name, implicit_test: false, &block)
-        endpoint = Restspec::Endpoints::Namespace.create_endpoint_by_full_name(name)
+        endpoint_finder = Restspec::Endpoints::Finder.new
+        endpoint = endpoint_finder.find(name).dup
 
         self.metadata[:current_endpoint] = endpoint
 

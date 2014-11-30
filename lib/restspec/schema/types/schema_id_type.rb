@@ -33,7 +33,11 @@ module Restspec::Schema::Types
     private
 
     def find_endpoint(name)
-      Restspec::Endpoints::Namespace.endpoint_by_full_name(name)
+      finder.find(name)
+    end
+
+    def finder
+      @finder ||= Restspec::Endpoints::Finder.new
     end
 
     def sample_item

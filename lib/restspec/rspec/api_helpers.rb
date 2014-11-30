@@ -12,7 +12,8 @@ module Restspec
                                             query_params: {},
                                             merge_example_params: true)
         endpoint = if endpoint_full_name.present?
-          Restspec::Endpoints::Namespace.endpoint_by_full_name(endpoint_full_name)
+          endpoint_finder = Restspec::Endpoints::Finder.new
+          endpoint_finder.find(endpoint_full_name)
         else
           @endpoint
         end

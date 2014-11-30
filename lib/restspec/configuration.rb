@@ -5,7 +5,6 @@ module Restspec
 
   class << self
     def configure
-      # TODO: This is json specific, try to refactor if needed
       config.request = OpenStruct.new(headers: {})
       config.request.headers['Content-Type'] = 'application/json'
       config.request.headers['Accept'] = 'application/json'
@@ -14,29 +13,31 @@ module Restspec
 
       yield config
 
-      load_schema_definition if config.schema_definition.present?
-      load_endpoint_definition if config.endpoints_definition.present?
-      load_requirement_definition if config.requirements_definition.present?
+      populate_stores
+    end
+
+    def populate_stores
+      load_schemas
+      load_endpoint_definition
+      load_requirement_definition
     end
 
     private
 
-    def load_schema_definition
-      load_definition config.schema_definition, :define_schemas
+    def load_schemas
+      eval_file Schema::DSL.new, config.schema_definition
     end
 
     def load_endpoint_definition
-      load_definition config.endpoints_definition, :define_endpoints
+      eval_file Endpoints::DSL.new, config.endpoints_definition
     end
 
     def load_requirement_definition
-      load_definition config.requirements_definition, :define_requirements
+      eval_file Requirements::DSL.new, config.requirements_definition
     end
 
-    def load_definition(definition_file, definition_method)
-      Restspec.public_send definition_method do
-        instance_eval(File.read(definition_file))
-      end
+    def eval_file(object, file_name)
+      object.instance_eval(File.read(file_name)) if file_name.present?
     end
   end
 end

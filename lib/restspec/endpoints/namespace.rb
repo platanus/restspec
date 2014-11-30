@@ -1,12 +1,10 @@
 module Restspec
   module Endpoints
-    class Namespace < Struct.new(:name)
+    class Namespace
       attr_accessor :schema_name, :base_path, :namespace
 
-      def add_endpoint(endpoint)
-        endpoints << endpoint.tap do |endpoint|
-          endpoint.namespace = self
-        end
+      def initialize(name)
+        self.name = name
       end
 
       def set_options(options)
@@ -15,6 +13,12 @@ module Restspec
 
       def endpoints
         @endpoints ||= []
+      end
+
+      def add_endpoint(endpoint)
+        endpoint.namespace = self
+        endpoints << endpoint
+        endpoint
       end
 
       def get_endpoint(endpoint_name)
@@ -41,13 +45,19 @@ module Restspec
 
       def name
         if top_level_namespace?
-          self[:name]
+          @name
         else
-          [namespace.name, self[:name]].reject(&:blank?).join('/')
+          [namespace.name, @name].reject(&:blank?).join('/')
         end
       end
 
+      def anonymous?
+        @name.blank?
+      end
+
       private
+
+      attr_writer :name
 
       def base_path
         @base_path ||= ''
@@ -55,26 +65,12 @@ module Restspec
     end
 
     class << Namespace
-      attr_accessor :namespaces
-
       def get_or_create(name: nil)
         get(name) || create(name)
       end
 
       def get(name)
-        namespaces.find do |ns|
-          ns.name == name
-        end
-      end
-
-      def endpoint_by_full_name(full_name)
-        endpoints.find do |endpoint|
-          endpoint.full_name == full_name
-        end
-      end
-
-      def create_endpoint_by_full_name(full_name)
-        endpoint_by_full_name(full_name).dup
+        namespaces[name]
       end
 
       def create_anonymous
@@ -82,25 +78,19 @@ module Restspec
       end
 
       def get_by_schema_name(schema_name)
-        namespaces.find do |namespace|
+        namespaces.find do |_, namespace|
           namespace.schema_name == schema_name
-        end
+        end.last
       end
 
       def create(name)
-        new(name).tap do |ns|
-          namespaces << ns
+        new(name).tap do |namespace|
+          namespaces[name] = namespace
         end
       end
 
       def namespaces
-        @namespaces ||= []
-      end
-
-      private
-
-      def endpoints
-        namespaces.map(&:endpoints).flatten
+        Restspec::NamespaceStore
       end
     end
   end

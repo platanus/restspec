@@ -36,8 +36,11 @@ module Restspec
         endpoint = Endpoint.new(name)
         endpoint_dsl = EndpointDSL.new(endpoint)
         namespace.add_endpoint(endpoint)
+
         endpoint_dsl.instance_eval(&block)
         endpoint_dsl.instance_eval(&common_endpoints_config_block)
+
+        Restspec::EndpointStore.store(endpoint)
       end
 
       HTTP_METHODS.each do |http_method|

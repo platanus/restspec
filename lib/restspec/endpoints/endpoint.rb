@@ -7,6 +7,8 @@ module Restspec
       attr_writer :schema_name
       attr_reader :executed_url
 
+      PARAM_INTERPOLATION_REGEX = /:([\w]+)/
+
       def execute(body: {}, url_params: {}, query_params: {})
         full_url_params = self.url_params.merge(url_params)
         full_url = build_url(full_url_params, query_params)
@@ -58,7 +60,7 @@ module Restspec
       end
 
       def in_member_or_collection?
-        namespace[:name].blank?
+        namespace.anonymous?
       end
 
       def calculate_url_params
@@ -81,7 +83,7 @@ module Restspec
       end
 
       def path_from_params(url_params)
-        full_path.gsub(/:([\w]+)/) do
+        full_path.gsub(PARAM_INTERPOLATION_REGEX) do
           url_params[$1] || url_params[$1.to_sym]
         end
       end
