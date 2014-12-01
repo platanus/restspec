@@ -18,6 +18,7 @@ module Restspec
         else
           Values::SuperHash.new(parsed_body)
         end
+        # TODO: What this code do with an array of scalars?
       end
 
       def parsed_body
