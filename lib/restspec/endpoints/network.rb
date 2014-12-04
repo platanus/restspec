@@ -4,7 +4,8 @@ module Restspec
       extend self
 
       def request(method, url, headers = {}, body = {})
-        network_adapter.request(method, url, headers, (body || '').to_json)
+        code, headers, body = network_adapter.request(method, url, headers, (body || '').to_json)
+        Response.new(code, headers, body)
       end
 
       private
@@ -24,7 +25,8 @@ module Restspec
       class HTTPartyNetworkAdapter
         def request(method, url, headers, body)
           response = HTTParty.send(method, url, headers: headers, body: body)
-          Response.new(response)
+          
+          [response.code, response.headers, response.body]
         end
       end
     end
