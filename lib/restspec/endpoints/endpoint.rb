@@ -97,7 +97,7 @@ module Restspec
       end
 
       def base_url
-        @base_url ||= Restspec.config.base_url
+        @base_url ||= (Restspec.config.base_url || '')
       end
     end
   end
