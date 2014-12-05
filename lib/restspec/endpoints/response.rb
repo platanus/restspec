@@ -12,8 +12,12 @@ module Restspec
       end
 
       def to_s
-        url = endpoint.executed_url || endpoint.full_path
-        "[#{endpoint.method.upcase} to #{url}]"
+        if endpoint.present?
+          url = endpoint.executed_url || endpoint.full_path
+          "[#{endpoint.method.upcase} to #{url}]"
+        else
+          raw_body
+        end
       end
 
       def read_body(value = parsed_body)
