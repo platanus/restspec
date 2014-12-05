@@ -6,6 +6,8 @@ module Restspec
       end
 
       def check!(object)
+        raise NoObjectError.new(object) unless object.is_a?(Hash)
+
         schema.attributes.each do |_, attribute|
           checker = ObjectChecker.new(object, attribute)
           
@@ -50,6 +52,18 @@ module Restspec
 
         def to_s
           "The property #{attribute.name} of #{object} should be of type #{attribute.type} but it was of type #{value.class}"
+        end
+      end
+
+      class NoObjectError < StandardError
+        attr_accessor :object
+
+        def initialize(object)
+          self.object = object
+        end
+
+        def to_s
+          "The object #{object}:#{object.class} is not a hash. It doesn't have attributes to be checked"
         end
       end
     end
