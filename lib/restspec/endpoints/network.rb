@@ -3,8 +3,8 @@ module Restspec
     module Network
       extend self
 
-      def request(method, url, headers = {}, body = {})
-        code, headers, body = network_adapter.request(method, url, headers, (body || '').to_json)
+      def request(request_object)
+        code, headers, body = network_adapter.request(request_object)
         Response.new(code, headers, body)
       end
 
@@ -23,8 +23,13 @@ module Restspec
       end
 
       class HTTPartyNetworkAdapter
-        def request(method, url, headers, body)
-          response = HTTParty.send(method, url, headers: headers, body: body)
+        def request(request_object)
+          response = HTTParty.send(
+            request_object.method,
+            request_object.url,
+            headers: request_object.headers,
+            body: request_object.raw_payload
+          )
           
           [response.code, response.headers, response.body]
         end

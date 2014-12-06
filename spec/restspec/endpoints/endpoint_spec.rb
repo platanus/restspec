@@ -17,6 +17,24 @@ describe Endpoint do
     end
   end
 
+  describe '#execute' do
+    let(:request) { OpenStruct.new }
+    let(:response) { OpenStruct.new }
+
+    before do
+      endpoint.method = :get
+      endpoint.path = '/home'
+
+      allow(Request).to receive(:new).and_return(request)
+      allow(Network).to receive(:request).and_return(response)
+    end
+
+    it 'tells the Network to request with a Request object containing everything' do
+      endpoint.execute
+      expect(Request).to have_received(:new).with(:get, '/home', {}, {})
+    end
+  end
+
   describe '#schema_name' do
     context 'stadalone' do
       before { endpoint.schema_name = :schema_name }

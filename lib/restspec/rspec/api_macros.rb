@@ -3,28 +3,40 @@ require_relative './matchers/api_matchers'
 module Restspec
   module RSpec
     module ApiMacros
-      def endpoint(name, implicit_test: false, &block)
+      def endpoint(name, options = {}, &block)
         endpoint_finder = Restspec::Endpoints::Finder.new
         endpoint = endpoint_finder.find(name).dup
 
+        implicit_test = options[:implicit_test]
+
         self.metadata[:current_endpoint] = endpoint
 
-        describe "[#{endpoint.method.to_s.upcase} #{endpoint.name}]" do
+        describe "[#{endpoint.method.to_s.upcase} #{endpoint.name}]", options do
           implicit_test ? test(&block) : instance_eval(&block)
         end
       end
 
       def test(message = 'the happy path', &test_body)
         context(message) do
-          let(:endpoint) { self.class.metadata[:current_endpoint].clone }
+          the_context = self
+
+          let(:endpoint) do
+            endpoint_block_endpoint = the_context.metadata[:parent_example_group][:current_endpoint]
+            the_context.metadata[:current_endpoint] ||= endpoint_block_endpoint.clone
+          end
 
           let(:response) do
             @response = execute_endpoint_lambda.call
           end
 
+          let(:request) do
+            endpoint.last_request
+          end
+
           let(:execute_endpoint_lambda) do
+            context = self.class
             -> do
-              endpoint.execute(
+              endpoint.execute_once(
                 body: payload.merge(@payload || {}),
                 url_params: url_params.merge(@url_params || {}),
                 query_params: query_params.merge(@query_params || {})

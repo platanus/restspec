@@ -5,17 +5,23 @@ module Restspec
     class Endpoint < Struct.new(:name)
       attr_accessor :method, :path, :namespace, :raw_url_params
       attr_writer :schema_name
-      attr_reader :executed_url
+      attr_reader :last_response, :last_request
 
       PARAM_INTERPOLATION_REGEX = /:([\w]+)/
 
       def execute(body: {}, url_params: {}, query_params: {})
-        full_url_params = self.url_params.merge(url_params)
-        full_url = build_url(full_url_params, query_params)
+        full_url = build_full_url(url_params, query_params)
+        request = Request.new(method, full_url, full_headers, body)
 
-        Network.request(method, full_url, full_headers, body).tap do |response|
-          self.executed_url = full_url
-          response.endpoint = self
+        Network.request(request).tap do |response|
+          self.last_request = inject_self_into(response, :endpoint)
+          self.last_request = inject_self_into(request, :endpoint)
+        end
+      end
+
+      def execute_once(body: {}, url_params: {}, query_params: {})
+        @executed_response ||= begin
+          execute(body: body, url_params: url_params, query_params: query_params)
         end
       end
 
@@ -53,7 +59,16 @@ module Restspec
 
       private
 
-      attr_writer :executed_url
+      attr_writer :last_response, :last_request
+
+      def inject_self_into(object, property)
+        object.tap { object.send(:"#{property}=", self) }
+      end
+
+      def build_full_url(url_params, query_params)
+        full_url_params = self.url_params.merge(Values::SuperHash.new(url_params))
+        build_url(full_url_params, query_params)
+      end
 
       def raw_url_params
         @raw_url_params ||= Restspec::Values::SuperHash.new
@@ -71,13 +86,13 @@ module Restspec
             value
           end
 
-          hash.merge(key => real_value)
+          hash.merge(key.to_sym => real_value)
         end
       end
 
       def build_url(full_url_params, query_params)
         query_string = query_params.to_param
-        full_query_string = query_string ? "?#{query_string}" : ""
+        full_query_string = query_string.present? ? "?#{query_string}" : ""
 
         base_url + path_from_params(full_url_params) + full_query_string
       end
@@ -93,7 +108,7 @@ module Restspec
       end
 
       def config_headers
-        Restspec.config.request.headers
+        Restspec.config.try(:request).try(:headers) || {}
       end
 
       def base_url

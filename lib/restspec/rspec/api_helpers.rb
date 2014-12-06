@@ -10,20 +10,37 @@ module Restspec
       def call_endpoint(endpoint_full_name, body: {},
                                             url_params: {},
                                             query_params: {},
-                                            merge_example_params: true)
-        endpoint = if endpoint_full_name.present?
-          endpoint_finder = Restspec::Endpoints::Finder.new
-          endpoint_finder.find(endpoint_full_name)
-        else
-          @endpoint
-        end
+                                            merge_example_params: true,
+                                            execution_method: :execute)
+        endpoint = find_endpoint_in_test_context(endpoint_full_name)
 
         if merge_example_params
           query_params = (@query_params || {}).merge(query_params)
           url_params = (@url_params || {}).merge(url_params)
         end
         
-        endpoint.execute(body: body, url_params: url_params, query_params: query_params)
+        endpoint.send(execution_method, body: body, url_params: url_params, query_params: query_params)
+      end
+
+      def find_endpoint_in_test_context(endpoint_full_name)
+        if endpoint_full_name.present?
+          test_context = self.class
+
+          test_context.metadata[:endpoints] ||= {}
+          test_context.metadata[:endpoints][endpoint_full_name] ||= begin
+            Restspec::Endpoints::Finder.new.find(endpoint_full_name)
+          end
+        else
+          @endpoint
+        end
+      end
+
+      def read_endpoint_once(endpoint_full_name = nil, options = {})
+        call_endpoint_once(endpoint_full_name, options).read_body
+      end
+
+      def call_endpoint_once(endpoint_full_name = nil, options = {})
+        call_endpoint(endpoint_full_name, options.merge(:execution_method => :execute_once))
       end
 
       def execute_endpoint!
