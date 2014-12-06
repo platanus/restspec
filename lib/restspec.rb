@@ -25,6 +25,7 @@ require "restspec/schema/dsl"
 require "restspec/schema/finder"
 
 require "restspec/endpoints/dsl"
+require "restspec/endpoints/request"
 require "restspec/endpoints/response"
 require "restspec/endpoints/network"
 require "restspec/endpoints/endpoint"
