@@ -15,6 +15,8 @@ module Restspec
         @endpoints ||= []
       end
 
+      # TODO: Test or think better (Maybe just store the endpoint ok but modifying the stores)
+      #       to give access though anonymous namespaces.
       def add_endpoint(endpoint)
         endpoint.namespace ||= self
         if anonymous?
