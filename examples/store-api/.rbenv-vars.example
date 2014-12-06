@@ -1,0 +1,3 @@
+DEV_DB_NAME=store-api
+DEV_DB_USER=root
+DEV_DB_PASSWORD=
