@@ -63,10 +63,10 @@ module Restspec
       end
 
       def collection(&block)
-        original_base_path = self.endpoint_base_path
-        self.endpoint_base_path = resource_endpoint_base_path
-        instance_eval(&block)
-        self.endpoint_base_path = original_base_path
+        collection_namespace = Namespace.create_anonymous
+        collection_namespace.namespace = namespace
+        collection_namespace_dsl = NamespaceDSL.new(collection_namespace)
+        collection_namespace_dsl.instance_eval(&block)
       end
 
       def schema(name)
