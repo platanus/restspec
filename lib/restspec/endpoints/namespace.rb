@@ -16,8 +16,12 @@ module Restspec
       end
 
       def add_endpoint(endpoint)
-        endpoint.namespace = self
-        endpoints << endpoint
+        endpoint.namespace ||= self
+        if anonymous?
+          self.namespace.add_endpoint(endpoint)
+        else
+          endpoints << endpoint
+        end
         endpoint
       end
 
