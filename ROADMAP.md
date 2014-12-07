@@ -5,8 +5,8 @@
 
 # For 0.1.1
 - Find a way to support a way of authentication based on cookies with an initial login.
+- Find a way to avoid example clashes when using resource tests.
 
 # For 0.2 (They require more thoughts)
 - Research pagination strategies and integrating them with `schema_id`.
 - Research some way to generate markdown from a mix of the schemas and endpoints. (Like Apiary and others)
-- Research ways to encapsulate the usage of change and not change in updates.

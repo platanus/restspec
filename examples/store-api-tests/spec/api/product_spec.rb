@@ -23,10 +23,8 @@ RSpec.describe :products, :type => :api do
     end
   end
 
-  endpoint 'products/update', resource: 'products/show', focus: true do
-    payload do
-      { name: Faker::Name.name }
-    end
+  endpoint 'products/update', resource: 'products/show' do
+    payload { schema_example(:product) }
 
     test do
       it 'updates the name' do
@@ -36,13 +34,13 @@ RSpec.describe :products, :type => :api do
     end
   end
 
-  endpoint 'products/destroy' do
+  endpoint 'products/destroy', resource: 'products/show' do
     test do
       it { should have_status(:no_content) }
 
       it 'actually destroyed the product' do
-        response = call_endpoint('products/show', { url_params: { id: endpoint.url_params.id } })
-        expect(response).to have_status(:not_found)
+        resource_after_destruction = resource_endpoint.execute
+        expect(resource_after_destruction).to have_status(:not_found)
       end
     end
   end

@@ -58,6 +58,10 @@ module Restspec
         raw_url_params[param] = Proc.new(&block)
       end
 
+      def executed_url
+        last_request.url
+      end
+
       private
 
       attr_writer :last_response, :last_request

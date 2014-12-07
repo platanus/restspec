@@ -8,10 +8,9 @@ module Restspec
         endpoint = endpoint_finder.find(name).dup
 
         implicit_test = options[:implicit_test]
-        resource = options[:resource]
 
         self.metadata[:current_endpoint] = endpoint
-        self.metadata[:current_resource_endpoint] = resource
+        self.metadata[:resource_endpoint] = Restspec::Endpoints::Finder.new.find(options[:resource])
 
         describe "[#{endpoint.method.to_s.upcase} #{endpoint.name}]", options do
           implicit_test ? test(&block) : instance_eval(&block)
@@ -27,12 +26,18 @@ module Restspec
             test_context.metadata[:current_endpoint] ||= endpoint_block_endpoint.clone
           end
 
+          before { response }
+
           let(:response) do
             @response = execute_endpoint_lambda.call
           end
 
           let(:request) do
             endpoint.last_request
+          end
+
+          let(:resource_endpoint) do
+            test_context.metadata[:resource_endpoint]
           end
 
           let(:initial_resource) do
@@ -44,8 +49,7 @@ module Restspec
 
           let(:execute_endpoint_lambda) do
             -> do
-              resource_endpoint_name = test_context.metadata[:current_resource_endpoint]
-              resource_endpoint = Restspec::Endpoints::Finder.new.find(resource_endpoint_name)
+              resource_endpoint = test_context.metadata[:resource_endpoint]
               resource_params = resource_endpoint.try(:url_params) || {}
 
               endpoint.execute_once(
@@ -81,9 +85,10 @@ module Restspec
         end
       end
 
-      def payload(params = nil, &payload_block)
+      def payload(params = {}, &payload_block)
         let(:example_payload) do
-          Restspec::Values::SuperHash.new(params || instance_eval(&payload_block))
+          payload_params = payload_block.present? ? instance_eval(&payload_block) : {}
+          Restspec::Values::SuperHash.new(params.merge(payload_params))
         end
       end
 
