@@ -22,10 +22,6 @@ module Restspec
         anonymous_namespace
       end
 
-      def set_options(options)
-        self.base_path = options[:base_path] if options[:base_path]
-      end
-
       def endpoints
         @endpoints ||= []
       end

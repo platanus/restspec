@@ -5,15 +5,15 @@ module Restspec
     HTTP_METHODS = [:get, :post, :put, :patch, :delete, :head]
 
     class DSL
-      def namespace(name, options = {}, &block)
+      def namespace(name, base_path: nil, &block)
         namespace = Namespace.create(name.to_s)
-        namespace.set_options(options)
+        namespace.base_path = base_path
         namespace_dsl = NamespaceDSL.new(namespace)
         namespace_dsl.instance_eval(&block)
       end
 
-      def resource(name, options = {}, &block)
-        namespace name, options.merge(base_path: "/#{name}") do
+      def resource(name, &block)
+        namespace name, base_path: "/#{name}" do
           if self.namespace.schema_name.blank?
             schema_name = name.to_s.singularize
             schema(schema_name.to_sym)
@@ -52,16 +52,15 @@ module Restspec
         end
       end
 
-      def member(options = {}, &block)
-        identifier_name = options[:identifier_name] || 'id'
-
+      def member(base_path: nil, identifier_name: 'id', &block)
         member_namespace = namespace.add_anonymous_children_namespace
-        member_namespace.set_options options.merge(base_path: "/:#{identifier_name}")
+        member_namespace.base_path = base_path || "/:#{identifier_name}"
         NamespaceDSL.new(member_namespace).instance_eval(&block)
       end
 
-      def collection(&block)
+      def collection(base_path: nil, &block)
         collection_namespace = namespace.add_anonymous_children_namespace
+        collection_namespace.base_path = base_path
         NamespaceDSL.new(collection_namespace).instance_eval(&block)
       end
 
