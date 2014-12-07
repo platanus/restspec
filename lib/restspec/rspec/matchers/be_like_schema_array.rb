@@ -1,7 +1,7 @@
 RSpec::Matchers.define :be_like_schema_array do |schema_name = nil|
   match do |response|
     schema = if schema_name.present?
-      finder.find(schema_name)
+      Restspec::SchemaStore.get(schema_name)
     else
       response.endpoint.schema
     end
@@ -11,10 +11,6 @@ RSpec::Matchers.define :be_like_schema_array do |schema_name = nil|
   end
 
   private
-
-  def finder
-    @finder ||= Restspec::Schema::Finder.new
-  end
 
   def checker_for(schema)
     Restspec::Schema::Checker.new(schema)

@@ -12,16 +12,14 @@ module Restspec::Schema::Types
     end
 
     def example_for(attribute)
-      if sample_item.present?
-        sample_item.id
+      return sample_item.id if sample_item.present?
+      
+      if create_response.code == 201 && create_response.body.try(:id)
+        create_response.body.id
       else
-        if create_response.code == 201 && create_response.body.id
-          create_response.body.id
-        else
-          example_options.fetch(:hardcoded_fallback) {
-            raise "We couldn't fetch any information for this example"
-          }
-        end
+        example_options.fetch(:hardcoded_fallback) {
+          raise "We couldn't fetch any information for this example"
+        }
       end
     end
 
@@ -33,11 +31,7 @@ module Restspec::Schema::Types
     private
 
     def find_endpoint(name)
-      finder.find(name)
-    end
-
-    def finder
-      @finder ||= Restspec::Endpoints::Finder.new
+      Restspec::EndpointStore.get(name)
     end
 
     def sample_item
@@ -46,8 +40,7 @@ module Restspec::Schema::Types
 
     def get_index_endpoint
       if schema_name.present?
-        namespace = Restspec::Endpoints::Namespace.get_by_schema_name(schema_name)
-        namespace.get_endpoint(:index)
+        Restspec::EndpointStore.get_by_schema_and_name(schema_name, :index)
       else
         find_endpoint(example_options.fetch(:fetch_endpoint))
       end

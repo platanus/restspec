@@ -31,11 +31,11 @@ module Restspec
       end
 
       def schema_name
-        @schema_name || namespace.actual_schema_name
+        @schema_name || namespace.schema_name
       end
 
       def schema
-        @schema ||= Restspec::Schema::Finder.new.find(schema_name)
+        @schema ||= Restspec::SchemaStore.get(schema_name)
       end
 
       def full_path

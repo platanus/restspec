@@ -6,7 +6,7 @@ module Restspec
 
     class DSL
       def namespace(name, options = {}, &block)
-        namespace = Namespace.get_or_create(name: name.to_s)
+        namespace = Namespace.create(name.to_s)
         namespace.set_options(options)
         namespace_dsl = NamespaceDSL.new(namespace)
         namespace_dsl.instance_eval(&block)

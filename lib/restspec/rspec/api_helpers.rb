@@ -28,7 +28,7 @@ module Restspec
 
           test_context.metadata[:endpoints] ||= {}
           test_context.metadata[:endpoints][endpoint_full_name] ||= begin
-            Restspec::Endpoints::Finder.new.find(endpoint_full_name)
+            Restspec::EndpointStore.get(endpoint_full_name)
           end
         else
           @endpoint

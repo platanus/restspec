@@ -3,7 +3,9 @@ require 'delegate'
 module Restspec
   module Stores
     class NamespaceStoreDelegator < SimpleDelegator
-      # For future changes
+      def store(namespace)
+        self[namespace.name] = namespace
+      end
     end
 
     NamespaceStore = NamespaceStoreDelegator.new(Hash.new)

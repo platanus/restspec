@@ -17,6 +17,37 @@ describe Endpoint do
     end
   end
 
+  describe '#execute_once' do
+    before do
+      allow(endpoint).to receive(:execute).and_return(true)
+    end
+
+    let(:body) { double }
+    let(:url_params) { double }
+    let(:query_params) { double }
+
+    it 'just calls execute once' do
+      4.times { endpoint.execute_once }
+      expect(endpoint).to have_received(:execute).once
+    end
+
+    it 'pass body, url_params and query_params to execute' do
+      endpoint.execute_once(body: body, url_params: url_params, query_params: query_params)
+      expect(endpoint).to have_received(:execute).with(
+        body: body, url_params: url_params, query_params: query_params
+      )
+    end
+
+    it 'executes :before param before executing' do
+      before_lambda = ->{ }
+      allow(before_lambda).to receive(:call)
+      endpoint.execute_once(before: before_lambda)
+
+      expect(before_lambda).to have_received(:call).ordered
+      expect(endpoint).to have_received(:execute).ordered
+    end
+  end
+
   describe '#execute' do
     let(:request) { OpenStruct.new }
     let(:response) { OpenStruct.new }
@@ -62,18 +93,16 @@ describe Endpoint do
   end
 
   describe '#schema' do
-    let(:finder) { double }
     let(:schema) { double }
 
     before do
       endpoint.schema_name = :single_schema_name
-      allow(Restspec::Schema::Finder).to receive(:new).and_return(finder)
-      allow(finder).to receive(:find).and_return(schema)
+      allow(Restspec::SchemaStore).to receive(:get).and_return(schema)
     end
 
     it 'tells the Restspec::Schema::Finder to find a schema' do
       found_schema = endpoint.schema
-      expect(finder).to have_received(:find).with(:single_schema_name)
+      expect(Restspec::SchemaStore).to have_received(:get).with(:single_schema_name)
       expect(found_schema).to eq(schema)
     end
   end
@@ -100,7 +129,7 @@ describe Endpoint do
     end
 
     context 'inside an anonymous namespace (a member or collection block)' do
-      let(:member_namespace) { Namespace.create_anonymous }
+      let(:member_namespace) { Namespace.create }
       let(:top_level_namespace) { Namespace.create('top_level') }
 
       before do

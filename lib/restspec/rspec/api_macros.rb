@@ -4,13 +4,12 @@ module Restspec
   module RSpec
     module ApiMacros
       def endpoint(name, options = {}, &block)
-        endpoint_finder = Restspec::Endpoints::Finder.new
-        endpoint = endpoint_finder.find(name).dup
+        endpoint = Restspec::EndpointStore.get(name).dup
 
         implicit_test = options[:implicit_test]
 
         self.metadata[:current_endpoint] = endpoint
-        self.metadata[:resource_endpoint] = Restspec::Endpoints::Finder.new.find(options[:resource])
+        self.metadata[:resource_endpoint] = Restspec::EndpointStore.get(options[:resource])
 
         describe "[#{endpoint.method.to_s.upcase} #{endpoint.name}]", options do
           implicit_test ? test(&block) : instance_eval(&block)

@@ -1,15 +1,22 @@
 module Restspec
   module Endpoints
     class Namespace
-      attr_accessor :schema_name, :base_path, :parent_namespace, :children_namespaces
+      attr_accessor :base_path, :parent_namespace, :children_namespaces
+      attr_writer :schema_name
 
-      def initialize(name)
+      def self.create(name = '')
+        namespace = new(name)
+        Stores::NamespaceStore.store(namespace)
+        namespace
+      end
+
+      def initialize(name = '')
         self.name = name
         self.children_namespaces = []
       end
 
       def add_anonymous_children_namespace
-        anonymous_namespace = Namespace.create_anonymous
+        anonymous_namespace = Namespace.create
         anonymous_namespace.parent_namespace = self
         children_namespaces << anonymous_namespace
         anonymous_namespace
@@ -45,8 +52,8 @@ module Restspec
         end
       end
 
-      def actual_schema_name
-        schema_name || parent_namespace.try(:actual_schema_name)
+      def schema_name
+        @schema_name || parent_namespace.try(:schema_name)
       end
 
       def name
@@ -82,36 +89,6 @@ module Restspec
 
       def base_path
         @base_path ||= ''
-      end
-    end
-
-    class << Namespace
-      def get_or_create(name: nil)
-        get(name) || create(name)
-      end
-
-      def get(name)
-        namespaces[name]
-      end
-
-      def create_anonymous
-        create('')
-      end
-
-      def get_by_schema_name(schema_name)
-        namespaces.find do |_, namespace|
-          namespace.schema_name == schema_name
-        end.last
-      end
-
-      def create(name)
-        new(name).tap do |namespace|
-          namespaces[name] = namespace
-        end
-      end
-
-      def namespaces
-        Restspec::NamespaceStore
       end
     end
   end
