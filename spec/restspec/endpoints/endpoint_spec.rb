@@ -106,7 +106,7 @@ describe Endpoint do
       before do
         top_level_namespace.base_path = '/monkeys'
         member_namespace.base_path = '/:id'
-        member_namespace.namespace = top_level_namespace
+        member_namespace.parent_namespace = top_level_namespace
         endpoint.namespace = member_namespace
       end
 

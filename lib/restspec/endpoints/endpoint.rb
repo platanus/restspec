@@ -19,8 +19,9 @@ module Restspec
         end
       end
 
-      def execute_once(body: {}, url_params: {}, query_params: {})
+      def execute_once(body: {}, url_params: {}, query_params: {}, before: ->{ })
         @executed_response ||= begin
+          before.call
           execute(body: body, url_params: url_params, query_params: query_params)
         end
       end

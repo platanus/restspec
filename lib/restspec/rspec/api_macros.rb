@@ -8,8 +8,10 @@ module Restspec
         endpoint = endpoint_finder.find(name).dup
 
         implicit_test = options[:implicit_test]
+        resource = options[:resource]
 
         self.metadata[:current_endpoint] = endpoint
+        self.metadata[:current_resource_endpoint] = resource
 
         describe "[#{endpoint.method.to_s.upcase} #{endpoint.name}]", options do
           implicit_test ? test(&block) : instance_eval(&block)
@@ -18,11 +20,11 @@ module Restspec
 
       def test(message = 'the happy path', &test_body)
         context(message) do
-          the_context = self
+          test_context = self
 
           let(:endpoint) do
-            endpoint_block_endpoint = the_context.metadata[:parent_example_group][:current_endpoint]
-            the_context.metadata[:current_endpoint] ||= endpoint_block_endpoint.clone
+            endpoint_block_endpoint = test_context.metadata[:parent_example_group][:current_endpoint]
+            test_context.metadata[:current_endpoint] ||= endpoint_block_endpoint.clone
           end
 
           let(:response) do
@@ -33,13 +35,28 @@ module Restspec
             endpoint.last_request
           end
 
+          let(:initial_resource) do
+            response
+            test_context.metadata[:initial_resource]
+          end
+
+          let(:final_resource) { body }
+
           let(:execute_endpoint_lambda) do
-            context = self.class
             -> do
+              resource_endpoint_name = test_context.metadata[:current_resource_endpoint]
+              resource_endpoint = Restspec::Endpoints::Finder.new.find(resource_endpoint_name)
+              resource_params = resource_endpoint.try(:url_params) || {}
+
               endpoint.execute_once(
                 body: payload.merge(@payload || {}),
-                url_params: url_params.merge(@url_params || {}),
-                query_params: query_params.merge(@query_params || {})
+                url_params: url_params.merge(resource_params).merge(@url_params || {}),
+                query_params: query_params.merge(@query_params || {}),
+                before: ->do
+                  if resource_endpoint.present?
+                    test_context.metadata[:initial_resource] = resource_endpoint.execute.body
+                  end
+                end
               )
             end
           end

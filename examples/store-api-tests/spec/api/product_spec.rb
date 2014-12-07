@@ -23,24 +23,15 @@ RSpec.describe :products, :type => :api do
     end
   end
 
-  endpoint 'products/update', focus: true do
+  endpoint 'products/update', resource: 'products/show', focus: true do
     payload do
-      { name: schema_example(:product)[:name] }
+      { name: Faker::Name.name }
     end
 
     test do
-      before do
-        @original_product = read_endpoint_once('products/show', {
-          url_params: { id: endpoint.url_params.id }
-        })
-      end
-
-      it { should have_status(:ok) }
-      it { should be_like_schema }
-
       it 'updates the name' do
-        expect(body.name).to_not eq(@original_product.name)
-        expect(body.name).to eq(request.payload.name)
+        expect(final_resource.name).to_not eq(initial_resource.name)
+        expect(final_resource.name).to eq(request.payload.name)
       end
     end
   end
