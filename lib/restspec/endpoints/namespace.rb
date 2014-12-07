@@ -1,10 +1,18 @@
 module Restspec
   module Endpoints
     class Namespace
-      attr_accessor :schema_name, :base_path, :namespace
+      attr_accessor :schema_name, :base_path, :parent_namespace, :children_namespaces
 
       def initialize(name)
         self.name = name
+        self.children_namespaces = []
+      end
+
+      def add_anonymous_children_namespace
+        anonymous_namespace = Namespace.create_anonymous
+        anonymous_namespace.parent_namespace = self
+        children_namespaces << anonymous_namespace
+        anonymous_namespace
       end
 
       def set_options(options)
@@ -15,45 +23,37 @@ module Restspec
         @endpoints ||= []
       end
 
-      # TODO: Test or think better (Maybe just store the endpoint ok but modifying the stores)
-      #       to give access though anonymous namespaces.
       def add_endpoint(endpoint)
-        endpoint.namespace ||= self
-        if anonymous?
-          self.namespace.add_endpoint(endpoint)
-        else
-          endpoints << endpoint
-        end
+        endpoint.namespace = self
+        endpoints << endpoint
         endpoint
       end
 
       def get_endpoint(endpoint_name)
-        endpoints.find do |endpoint|
-          endpoint.name == endpoint_name
-        end
+        search_internal_endpoint(endpoint_name) || search_child_endpoint(endpoint_name)
       end
 
       def top_level_namespace?
-        namespace.nil?
+        parent_namespace.nil?
       end
 
       def full_base_path
         if top_level_namespace?
           base_path
         else
-          namespace.full_base_path + base_path
+          parent_namespace.full_base_path + base_path
         end
       end
 
       def actual_schema_name
-        schema_name || namespace.try(:schema_name)
+        schema_name || parent_namespace.try(:actual_schema_name)
       end
 
       def name
         if top_level_namespace?
           @name
         else
-          [namespace.name, @name].reject(&:blank?).join('/')
+          [parent_namespace.name, @name].reject(&:blank?).join('/')
         end
       end
 
@@ -64,6 +64,21 @@ module Restspec
       private
 
       attr_writer :name
+
+      def search_internal_endpoint(endpoint_name)
+        endpoints.find do |endpoint|
+          endpoint.name == endpoint_name
+        end
+      end
+
+      def search_child_endpoint(endpoint_name)
+        children_namespaces.each do |children_namespace|
+          child_endpoint = children_namespace.get_endpoint(endpoint_name)
+          return child_endpoint if child_endpoint.present?
+        end
+
+        return nil
+      end
 
       def base_path
         @base_path ||= ''

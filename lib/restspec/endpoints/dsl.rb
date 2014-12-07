@@ -55,18 +55,14 @@ module Restspec
       def member(options = {}, &block)
         identifier_name = options[:identifier_name] || 'id'
 
-        member_namespace = Namespace.create_anonymous
+        member_namespace = namespace.add_anonymous_children_namespace
         member_namespace.set_options options.merge(base_path: "/:#{identifier_name}")
-        member_namespace.namespace = namespace
-        member_namespace_dsl = NamespaceDSL.new(member_namespace)
-        member_namespace_dsl.instance_eval(&block)
+        NamespaceDSL.new(member_namespace).instance_eval(&block)
       end
 
       def collection(&block)
-        collection_namespace = Namespace.create_anonymous
-        collection_namespace.namespace = namespace
-        collection_namespace_dsl = NamespaceDSL.new(collection_namespace)
-        collection_namespace_dsl.instance_eval(&block)
+        collection_namespace = namespace.add_anonymous_children_namespace
+        NamespaceDSL.new(collection_namespace).instance_eval(&block)
       end
 
       def schema(name)
