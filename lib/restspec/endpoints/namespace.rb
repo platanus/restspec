@@ -3,6 +3,7 @@ module Restspec
     class Namespace
       attr_accessor :base_path, :parent_namespace, :children_namespaces
       attr_writer :schema_name
+      attr_reader :endpoints
 
       def self.create(name = '')
         namespace = new(name)
@@ -12,6 +13,7 @@ module Restspec
 
       def initialize(name = '')
         self.name = name
+        self.endpoints = []
         self.children_namespaces = []
       end
 
@@ -20,10 +22,6 @@ module Restspec
         anonymous_namespace.parent_namespace = self
         children_namespaces << anonymous_namespace
         anonymous_namespace
-      end
-
-      def endpoints
-        @endpoints ||= []
       end
 
       def add_endpoint(endpoint)
@@ -66,7 +64,7 @@ module Restspec
 
       private
 
-      attr_writer :name
+      attr_writer :name, :endpoints
 
       def search_internal_endpoint(endpoint_name)
         endpoints.find do |endpoint|
