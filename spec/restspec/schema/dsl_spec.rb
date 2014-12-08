@@ -44,12 +44,12 @@ describe SingleSchemaDSL do
       dsl.attribute('attr_name', type_instance, {})
 
       expect(dsl.schema.attributes.size).to eq(1)
-      attribute = dsl.schema.attributes[0]
-      if attribute.present?
-        expect(attribute.name).to eq('attr_name')
-        expect(attribute.type).to eq(type_instance)
-        expect(attribute.options).to eq({})
-      end
+
+      attribute = dsl.schema.attributes.values.first
+
+      expect(attribute.name).to eq('attr_name')
+      expect(attribute.type).to eq(type_instance)
+      expect(attribute.options).to eq({})
     end
   end
 end

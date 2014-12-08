@@ -1,5 +1,15 @@
 Dir["#{File.dirname __FILE__}/support/**/*.rb"].each {|f| require f}
 
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/docs/'
+  add_filter '/pkg/'
+  add_filter '/examples/'
+  add_filter '/lib/restspec/rspec'
+end
+
 require 'restspec'
 
 RSpec.configure do |config|
