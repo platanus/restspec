@@ -8,7 +8,7 @@ module Restspec
 
         implicit_test = options[:implicit_test]
 
-        self.metadata[:current_endpoint] = endpoint
+        self.metadata[:current_endpoint_template] = endpoint
         self.metadata[:resource_endpoint] = Restspec::EndpointStore.get(options[:resource])
 
         describe "[#{endpoint.method.to_s.upcase} #{endpoint.name}]", options do
@@ -16,12 +16,14 @@ module Restspec
         end
       end
 
-      def test(message = 'the happy path', &test_body)
-        context(message) do
+      def test(message = 'the happy path', options = {}, &test_body)
+        endpoint_context = self
+
+        context(message, options) do
           test_context = self
 
           let(:endpoint) do
-            endpoint_block_endpoint = test_context.metadata[:parent_example_group][:current_endpoint]
+            endpoint_block_endpoint = endpoint_context.metadata[:current_endpoint_template]
             test_context.metadata[:current_endpoint] ||= endpoint_block_endpoint.clone
           end
 

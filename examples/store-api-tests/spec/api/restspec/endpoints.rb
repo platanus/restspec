@@ -29,5 +29,9 @@ resource :categories do
     get :show
     put :update
     delete :destroy
+
+    get :products, '/products' do
+      schema :product
+    end
   end
 end
