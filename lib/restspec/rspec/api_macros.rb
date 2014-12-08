@@ -40,26 +40,22 @@ module Restspec
           end
 
           let(:initial_resource) do
-            response
-            test_context.metadata[:initial_resource]
+            test_context.metadata[:initial_resource] ||= begin
+              resource_endpoint.try(:execute).try(:body)
+            end
           end
 
           let(:final_resource) { body }
 
           let(:execute_endpoint_lambda) do
-            -> do
-              resource_endpoint = test_context.metadata[:resource_endpoint]
-              resource_params = resource_endpoint.try(:url_params) || {}
+            resource_params = resource_endpoint.try(:url_params) || {}
 
+            -> do
               endpoint.execute_once(
                 body: payload.merge(@payload || {}),
                 url_params: url_params.merge(resource_params).merge(@url_params || {}),
                 query_params: query_params.merge(@query_params || {}),
-                before: ->do
-                  if resource_endpoint.present?
-                    test_context.metadata[:initial_resource] = resource_endpoint.execute.body
-                  end
-                end
+                before: ->{ initial_resource }
               )
             end
           end

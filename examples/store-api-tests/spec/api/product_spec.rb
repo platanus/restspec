@@ -24,7 +24,7 @@ RSpec.describe :products, :type => :api do
   end
 
   endpoint 'products/update', resource: 'products/show' do
-    payload { schema_example(:product) }
+    payload { { name: "#{initial_resource.name}-001" } }
 
     test do
       it 'updates the name' do
