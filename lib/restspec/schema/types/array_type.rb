@@ -27,7 +27,7 @@ module Restspec::Schema::Types
 
     def length_only_works_with_parameterized_types!
       if example_options.has_key?(:length) && !parameterized_type
-        raise "To use the :length option you need to have a parameterized_type or we can't generate the array :("
+        raise "To use the :length option you need to have a parameterized_type or we can't generate the array"
       end
     end
   end

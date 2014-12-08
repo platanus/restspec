@@ -5,7 +5,7 @@ RSpec::Matchers.define :be_like_schema_array do |schema_name = nil|
     else
       response.endpoint.schema
     end
-    
+
     body = response.respond_to?(:body) ? response.body : response
     checker_for(schema).check_array!(body)
   end

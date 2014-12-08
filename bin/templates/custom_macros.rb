@@ -1,3 +1,3 @@
 module CustomMacros
-  
+
 end

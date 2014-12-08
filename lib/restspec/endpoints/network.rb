@@ -30,7 +30,7 @@ module Restspec
             headers: request_object.headers,
             body: request_object.raw_payload
           )
-          
+
           [response.code, response.headers, response.body]
         end
       end

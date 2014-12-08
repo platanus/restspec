@@ -13,7 +13,7 @@ module Restspec::Schema::Types
 
     def example_for(attribute)
       return sample_item.id if sample_item.present?
-      
+
       if create_response.code == 201 && create_response.body.try(:id)
         create_response.body.id
       else

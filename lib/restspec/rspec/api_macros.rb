@@ -103,7 +103,7 @@ module Restspec
         if schema_name.nil? && metadata[:current_endpoint]
           schema_name = metadata[:current_endpoint].schema_name
         end
-        
+
         Restspec.example_for(schema_name, extensions)
       end
 

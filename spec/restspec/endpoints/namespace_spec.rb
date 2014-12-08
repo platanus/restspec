@@ -128,7 +128,7 @@ describe Namespace do
       context 'if the namespace has a name too' do
         let(:namespace) { Namespace.create('ns3').tap { |ns| ns.parent_namespace = parent } }
         it 'the name is put at the end' do
-          expect(namespace.name).to eq('ns/ns2/ns3') 
+          expect(namespace.name).to eq('ns/ns2/ns3')
         end
       end
     end

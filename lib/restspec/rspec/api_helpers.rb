@@ -18,7 +18,7 @@ module Restspec
           query_params = (@query_params || {}).merge(query_params)
           url_params = (@url_params || {}).merge(url_params)
         end
-        
+
         endpoint.send(execution_method, body: body, url_params: url_params, query_params: query_params)
       end
 

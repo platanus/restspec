@@ -106,7 +106,7 @@ module Restspec
         endpoint.add_url_param_block(param) do
           value_or_type_context = ValueOrTypeContext.new
           value_or_type = value_or_type_context.instance_eval(&value_or_type_block)
-          
+
           if value_or_type.is_a?(Restspec::Schema::Types::BasicType)
             attribute = endpoint.schema.attributes[param] || begin
               Restspec::Schema::Attribute.new(param, value_or_type_context.integer, {})

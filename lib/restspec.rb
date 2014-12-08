@@ -1,7 +1,6 @@
 require "restspec/version"
 
 module Restspec
-  # Your code goes here...
 end
 
 require 'active_support/core_ext/object'

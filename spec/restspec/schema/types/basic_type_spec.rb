@@ -60,4 +60,3 @@ describe BasicType do
     end
   end
 end
-

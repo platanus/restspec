@@ -10,7 +10,7 @@ module Restspec
 
         schema.attributes.each do |_, attribute|
           checker = ObjectChecker.new(object, attribute)
-          
+
           raise NoAttributeError.new(object, attribute) if checker.missed_key?
           raise DifferentTypeError.new(object, attribute) if checker.wrong_type?
         end
@@ -67,5 +67,5 @@ module Restspec
         end
       end
     end
-  end  
+  end
 end
