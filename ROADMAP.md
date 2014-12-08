@@ -4,6 +4,7 @@
 
 # For 0.1.1
 - 100% Test coverage.
+- Test the restspec binary.
 - Find a way to support a way of authentication based on cookies with an initial login.
 - Find a way to avoid example value clashes when using resource tests.
 
