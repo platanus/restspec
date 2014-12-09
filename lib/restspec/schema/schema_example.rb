@@ -10,9 +10,11 @@ module Restspec
 
       def value
         attributes.inject({}) do |sample, (_, attribute)|
-          sample.merge({
-            attribute.name => AttributeExample.new(attribute).value
-          })
+          if attribute.can_generate_examples?
+            sample.merge(attribute.name => AttributeExample.new(attribute).value)
+          else
+            sample
+          end
         end.merge(extensions)
       end
 

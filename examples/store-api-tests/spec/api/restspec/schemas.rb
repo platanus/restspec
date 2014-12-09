@@ -3,6 +3,7 @@ schema :product do
   attribute :code, string
   attribute :price, decimal | decimal_string
   attribute :category_id, schema_id(:category)
+  # attribute :category, embedded_schema(:category) :for => [:check]
 end
 
 schema :category do

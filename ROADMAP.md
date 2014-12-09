@@ -1,4 +1,8 @@
 # For 0.1 (First Release)
+- Allow embedding of schemas on other schemas. Maybe this:
+    ```
+    attribute :category, embedded_schema(:category) :for => [:check]
+    ```
 - Add tests for all the classes or at least 70% of the code.
 - Make a complete README.
 

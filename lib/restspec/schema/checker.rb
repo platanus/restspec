@@ -9,10 +9,12 @@ module Restspec
         raise NoObjectError.new(object) unless object.is_a?(Hash)
 
         schema.attributes.each do |_, attribute|
-          checker = ObjectChecker.new(object, attribute)
+          if attribute.can_be_checked?
+            checker = ObjectChecker.new(object, attribute)
 
-          raise NoAttributeError.new(object, attribute) if checker.missed_key?
-          raise DifferentTypeError.new(object, attribute) if checker.wrong_type?
+            raise NoAttributeError.new(object, attribute) if checker.missed_key?
+            raise DifferentTypeError.new(object, attribute) if checker.wrong_type?
+          end
         end
       end
 

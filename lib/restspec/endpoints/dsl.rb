@@ -109,7 +109,7 @@ module Restspec
 
           if value_or_type.is_a?(Restspec::Schema::Types::BasicType)
             attribute = endpoint.schema.attributes[param] || begin
-              Restspec::Schema::Attribute.new(param, value_or_type_context.integer, {})
+              Restspec::Schema::Attribute.new(param, value_or_type_context.integer)
             end
             value_or_type.example_for(attribute)
           else

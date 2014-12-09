@@ -40,7 +40,7 @@ describe SingleSchemaDSL do
   describe '#attribute' do
     let(:type_instance) { dsl.string }
 
-    it 'creates an attribute with name, type and options' do
+    it 'creates an attribute with name and type' do
       dsl.attribute('attr_name', type_instance, {})
 
       expect(dsl.schema.attributes.size).to eq(1)
@@ -49,7 +49,30 @@ describe SingleSchemaDSL do
 
       expect(attribute.name).to eq('attr_name')
       expect(attribute.type).to eq(type_instance)
-      expect(attribute.options).to eq({})
+    end
+
+    context 'when the :for option is just for checks' do
+      let(:attribute) { dsl.attribute('attr_name', type_instance, for: [:checks]) }
+
+      it 'is not allowed to generate examples' do
+        expect(attribute.can_generate_examples?).to eq(false)
+      end
+
+      it 'is allowed to run in validations' do
+        expect(attribute.can_be_checked?).to eq(true)
+      end
+    end
+
+    context 'when the :for option is just for examples' do
+      let(:attribute) { dsl.attribute('attr_name', type_instance, for: [:examples]) }
+
+      it 'is allowed to generate examples' do
+        expect(attribute.can_generate_examples?).to eq(true)
+      end
+
+      it 'is not allowed to run in validations' do
+        expect(attribute.can_be_checked?).to eq(false)
+      end
     end
   end
 end
