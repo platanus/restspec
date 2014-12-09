@@ -98,6 +98,7 @@ describe Endpoint do
     before do
       endpoint.schema_name = :single_schema_name
       allow(Restspec::SchemaStore).to receive(:get).and_return(schema)
+      allow(schema).to receive(:extend_with) { schema }
     end
 
     it 'tells the Restspec::Schema::Finder to find a schema' do

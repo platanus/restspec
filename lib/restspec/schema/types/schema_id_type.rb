@@ -2,12 +2,12 @@ module Restspec::Schema::Types
   class SchemaIdType < BasicType
     attr_accessor :schema_name
 
-    def initialize(options)
+    def initialize(options, options_when_name_is_present = {})
       if options.is_a?(Symbol)
         self.schema_name = options
-        super({})
+        super(options_when_name_is_present)
       else
-        super
+        super(options)
       end
     end
 

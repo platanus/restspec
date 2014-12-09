@@ -1,7 +1,7 @@
 module Restspec
   module Endpoints
     class Namespace
-      attr_accessor :base_path, :parent_namespace, :children_namespaces
+      attr_accessor :base_path, :parent_namespace, :children_namespaces, :schema_extensions
       attr_writer :schema_name
       attr_reader :endpoints
 

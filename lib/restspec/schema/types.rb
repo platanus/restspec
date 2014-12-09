@@ -16,6 +16,7 @@ require_relative './types/array_type'
 require_relative './types/one_of_type'
 require_relative './types/hash_type'
 require_relative './types/null_type'
+require_relative './types/embedded_schema_type'
 
 module Restspec::Schema::Types
   ALL = {
@@ -28,6 +29,7 @@ module Restspec::Schema::Types
     array: ArrayType,
     one_of: OneOfType,
     hash: HashType,
-    null: NullType
+    null: NullType,
+    embedded_schema: EmbeddedSchemaType
   }
 end

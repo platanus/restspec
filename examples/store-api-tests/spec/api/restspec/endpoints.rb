@@ -3,7 +3,9 @@ resource :products do
 
   collection do
     post :create
-    get :index
+    get :index do
+      schema :product, without: [:category]
+    end
   end
 
   member do

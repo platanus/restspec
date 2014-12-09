@@ -17,6 +17,7 @@ mkmf.log
 .tags_sorted_by_file
 
 examples/store-api/tmp/pids
+examples/store-api/tmp/
 examples/store-api/log/*.log
 examples/store-api/.rbenv-vars
 examples/store-api/db/*.sqlite3

@@ -3,7 +3,7 @@ require 'httparty'
 module Restspec
   module Endpoints
     class Endpoint < Struct.new(:name)
-      attr_accessor :method, :path, :namespace, :raw_url_params
+      attr_accessor :method, :path, :namespace, :raw_url_params, :schema_extensions
       attr_writer :schema_name
       attr_reader :last_response, :last_request
 
@@ -35,7 +35,7 @@ module Restspec
       end
 
       def schema
-        @schema ||= Restspec::SchemaStore.get(schema_name)
+        @schema ||= schema_from_store.clone.extend_with(schema_extensions || {})
       end
 
       def full_path
@@ -65,6 +65,10 @@ module Restspec
       private
 
       attr_writer :last_response, :last_request
+
+      def schema_from_store
+        Restspec::SchemaStore.get(schema_name)
+      end
 
       def inject_self_into(object, property)
         object.tap { object.send(:"#{property}=", self) }

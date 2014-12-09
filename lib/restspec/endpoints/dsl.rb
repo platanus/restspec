@@ -64,8 +64,9 @@ module Restspec
         NamespaceDSL.new(collection_namespace).instance_eval(&block)
       end
 
-      def schema(name)
+      def schema(name, schema_extensions = {})
         namespace.schema_name = name
+        namespace.schema_extensions = schema_extensions
       end
 
       def all(&endpoints_config)
@@ -94,8 +95,9 @@ module Restspec
         endpoint.path = path
       end
 
-      def schema(name)
+      def schema(name, schema_extensions = {})
         endpoint.schema_name = name
+        endpoint.schema_extensions = schema_extensions
       end
 
       def headers
