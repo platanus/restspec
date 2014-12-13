@@ -22,7 +22,7 @@ You can skip this section but i think it will help you understand how things hap
 
 The only one that is completely necesary is the `endpoints.rb` file. This file is when you define what your endpoints are and give them names. For example, the following endpoint: `GET /users/:id/orders` can be mapped to an endpoint named `users/orders`. This name can be used to reference and execute the endpoint in the tests instead of repeating it many times.
 
-The next one, `schemas.rb`, represents the attributes your entities are πsche
+The next one, `schemas.rb`, represents the attributes your entities are made of, and the final one, `requirements.rb` only helps to ensure that some information is already present on the system when the tests begin.
 
 ### Setup
 
