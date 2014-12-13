@@ -1,5 +1,7 @@
 # Types
 
+### What types can do?
+
 ## Array Type
 
 - It uses the method `array`.
