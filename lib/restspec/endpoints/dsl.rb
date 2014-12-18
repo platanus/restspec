@@ -12,8 +12,8 @@ module Restspec
         namespace_dsl.instance_eval(&block)
       end
 
-      def resource(name, &block)
-        namespace name, base_path: "/#{name}" do
+      def resource(name, options = {}, &block)
+        namespace name, base_path: (options[:base_path] || "/#{name}") do
           if self.namespace.schema_name.blank?
             schema_name = name.to_s.singularize
             schema(schema_name.to_sym)

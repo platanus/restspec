@@ -10,7 +10,7 @@ Install it globally like this:
 
 ## Usage
 
-For a basic tutorial of how to use Restspec, please check [this file](TODO).
+For a basic tutorial of how to use Restspec, please check [this file](https://github.com/platanus/restspec/blob/master/docs/tutorial.md).
 
 ### The Restspec Approach
 
@@ -23,6 +23,8 @@ You can skip this section but i think it will help you understand how things hap
 The only one that is completely necesary is the `endpoints.rb` file. This file is when you define what your endpoints are and give them names. For example, the following endpoint: `GET /users/:id/orders` can be mapped to an endpoint named `users/orders`. This name can be used to reference and execute the endpoint in the tests instead of repeating it many times.
 
 The next one, `schemas.rb`, represents the attributes your entities are made of, and the final one, `requirements.rb` only helps to ensure that some information is already present on the system when the tests begin.
+
+When we talk about endpoints as objects to reuse, we can think of the dependencies between the endpoints as dependencies between models. We can just make the `product/show` endpoint to depend on the `products/index` and the `products/create` endpoints to make sure that the test always run with a product.
 
 ### Setup
 
@@ -69,7 +71,7 @@ resources :products do
 end
 ```
 
-Check the endpoint DSL documentation [here](TODO) for more details of the available methods and options. The only important thing about them is that they are the endpoints we have to test.
+Check the endpoint DSL documentation [here](https://github.com/platanus/restspec/blob/master/docs/endpoints.md) for more details of the available methods and options. The only important thing about them is that they are the endpoints we have to test.
 
 ### Schemas
 
@@ -89,9 +91,9 @@ schema :category do
 end
 ```
 
-As you can see, a schema is compound of attributes that are attached to one type. The types are useful for many things. The types documentation is located [here](TODO).
+As you can see, a schema is compound of attributes that are attached to one type. The types are useful for many things. The types documentation is located [here](https://github.com/platanus/restspec/blob/master/docs/types.md).
 
-The schemas DSL documentation is located [here](TODO). Schemas are a very important part of Restspec but they are not as necesary as the endpoints.
+The schemas DSL documentation is located [here](https://github.com/platanus/restspec/blob/master/docs/schemas.md). Schemas are a very important part of Restspec but they are not as necesary as the endpoints.
 
 ### Tests
 
@@ -152,7 +154,7 @@ endpoint 'products/update', resource: 'products/show' do
 end
 ```
 
-For more information about what can you do in your tests, you can see what are the [available matchers](TODO), the [available helpers](TODO) and the [available macros](TODO).
+For more information about what can you do in your tests, you can see what are the [available matchers](https://github.com/platanus/restspec/blob/master/docs/matchers.md), the [available helpers](https://github.com/platanus/restspec/blob/master/docs/helpers.md) and the [available macros](https://github.com/platanus/restspec/blob/master/docs/macros.md).
 
 ### Requirements
 
@@ -179,8 +181,8 @@ end
 
 ## A note about the Roadmap
 
-Because the scope of this library is not small, we couldn't make a first release as small as we are acostumed. Anyway, we love to be able to deliver in small iterations, so there a [ROADMAP](TODO) file that we use to keep track of the objectives that we have. Althought many of the objectives of the gem are already done, there are more objectives that will expect to the following releases.
+Because the scope of this library is not small, we couldn't make a first release as small as we are acostumed. Anyway, we love to be able to deliver in small iterations, so there a [ROADMAP](https://github.com/platanus/restspec/blob/master/ROADMAP.md) file that we use to keep track of the objectives that we have. Althought many of the objectives of the gem are already done, there are more objectives that will expect to the following releases.
 
 ## Contribute
 
-Please be sure to have the [EditorConfig](http://editorconfig.org/) plugin in your text editor to follow the guidelines proposed in the [.editorconfig](TODO) file. To contribute, please send us a PR and make sure that the current tests keeps working after that. You can help to complete the unit tests too. Anyway, when we have all tests together, we should have Travis working, but, right now, it's ok for us to just test the PR before going on.
+Please be sure to have the [EditorConfig](http://editorconfig.org/) plugin in your text editor to follow the guidelines proposed in the [.editorconfig](https://github.com/platanus/restspec/blob/master/.editorconfig) file. To contribute, please send us a PR and make sure that the current tests keeps working after that. You can help to complete the unit tests too. Anyway, when we have all tests together, we should have Travis working, but, right now, it's ok for us to just test the PR before going on.

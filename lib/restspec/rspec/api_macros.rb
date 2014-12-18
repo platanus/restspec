@@ -101,14 +101,6 @@ module Restspec
         end
       end
 
-      def schema_example(schema_name = nil, extensions = {})
-        if schema_name.nil? && metadata[:current_endpoint]
-          schema_name = metadata[:current_endpoint].schema_name
-        end
-
-        Restspec.example_for(schema_name, extensions)
-      end
-
       def ensure!(name)
         requirement = Restspec::Requirements::Requirement.find_by_name(name)
         requirement.assert!

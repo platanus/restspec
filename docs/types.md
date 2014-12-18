@@ -1,8 +1,29 @@
-# Types
+# Types Documentation
 
-### What types can do?
+## Types Composition
 
-## Array Type
+### Disjunction
+
+You can make a logical OR on types using `|`. In this way, an attribute can have a type or another. It generates information from the first type but, when validating, the check goes first to the first type and, if it fails, go to the next one. With this, you can do something like this:
+
+```ruby
+attribute :name, string | null
+```
+
+### Generic Types
+
+With the `of` method you can attach a type information into another type. Every time can decide if it does something with the aditional type. For example, the `array` type can look for the types of each one of his elements using `of`, in this way:
+
+```ruby
+schema :raffle do
+  attribute :name, string
+  attribute :participants, array.of(embedded_schema(:person))
+end
+```
+
+## Types
+
+### Array Type
 
 - It uses the method `array`.
 - It tests if the current attribute value is an array.
@@ -15,14 +36,14 @@
     ```
 
 
-## Boolean Type
+### Boolean Type
 
 - It uses the method `boolean`.
 - It tests if the current attribute value is `true` or `false`.
 - It generates randomly `true` or `false`.
 - It doesn't use any option.
 
-## Decimal String Type
+### Decimal String Type
 
 - It uses the method `decimal_string`.
 - It tests if the current attribute value is a string that looks like a decimal. (Eg: `"0.1"`)
@@ -35,7 +56,7 @@
         * **integer_part:** It specifies the expected integer part size of the given attribute value.
         * **decimal_part:** It verifies the expected decimal part size of the given attribute value.
 
-## Decimal Type
+### Decimal Type
 
 - It uses the method `decimal`.
 - In only tests if the attribute value is numeric.
@@ -45,7 +66,7 @@
         * **integer_part:** It specifies the integer part of the generated number.
         * **decimal_part:** It specifies the decimal part of the generated number.
 
-## Hash Type
+### Hash Type
 
 - It uses the method `hash`.
 - It tests if the attribute is a hash containing some optional keys with an optional value type.
@@ -55,14 +76,14 @@
         * **keys:** Array of keys that should be in the hash.
         * **value_type:** Type (method used by the type) of the values of the hash. With this, `hash` can be composed of other types.
 
-## Integer Type
+### Integer Type
 
 - It uses the method `integer`.
 - In only tests if the attribute value is a fixed number.
 - It generates a random integer number.
 - It doesn't use any option.
 
-## Null Type
+### Null Type
 
 - It uses the method `null`.
 - It only test for null values.
@@ -74,7 +95,7 @@
     attribute :address, string | null
     ```
 
-## 'One Of' Type
+### 'One Of' Type
 - It uses the method `one_of`.
 - It checks if the attribute values is one of the items specified in the `elements` array option.
 - It returns one of the items in the `elements` array option.
@@ -84,7 +105,7 @@
     attribute :type, one_of(elements: ['water', 'fire', 'thunder', 'psychic'])
     ```
 
-## 'Schema Id' Type
+### 'Schema Id' Type
 
 - It uses the method `schema_id`. The first parameter of this method is the main schema to test.
 - It checks if the attribute value is an id of some element in the `index` endpoint associated to the given schema.
@@ -98,9 +119,16 @@
         * **fetch_endpoint:** The endpoint to use to fetch. By default, it's the `index` endpoint of the namespace asociated with this schema.
         * **create_endpoint:** The endpoint to use to create data. By default, it's the `create` endpoint of the namespace asociated with this schema.
 
-## String Type
+### String Type
 
 - It uses the method `string`.
 - It tests if the current attribute value is a string.
 - It generates a random word.
+- It doesn't use any option.
+
+### Embedded Schema
+
+- It uses the method `embedded_schema` with the name of the schema to embed.
+- It tests if the current attribute is a hash that have the shape of the schema.
+- It generates an example of the given schema.
 - It doesn't use any option.
