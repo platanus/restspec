@@ -1,4 +1,5 @@
-# Restspec
+# Restspec [![Gem Version](https://badge.fury.io/rb/restspec.svg)](http://badge.fury.io/rb/restspec) [![Build Status](https://travis-ci.org/platanus/restspec.svg?branch=master)](https://travis-ci.org/platanus/restspec)
+
 
 Restspec is a REST api framework built in top of RSpec to help you write robust and mantainable tests to ensure that your api behaves exactly as you want.
 
