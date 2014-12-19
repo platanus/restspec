@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
 gem 'pry'
-gem 'restspec', path: '~/dev/projects/ruby/restspec'
+gem 'restspec', path: ENV['RESTSPEC_HOME']

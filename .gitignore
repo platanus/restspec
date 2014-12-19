@@ -15,6 +15,7 @@ mkmf.log
 *.DS_Store
 .tags
 .tags_sorted_by_file
+.rbenv-vars
 
 examples/store-api/tmp/pids
 examples/store-api/tmp/

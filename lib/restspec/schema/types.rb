@@ -17,6 +17,8 @@ require_relative './types/one_of_type'
 require_relative './types/hash_type'
 require_relative './types/null_type'
 require_relative './types/embedded_schema_type'
+require_relative './types/date_type'
+require_relative './types/datetime_type'
 
 module Restspec::Schema::Types
   ALL = {
@@ -30,6 +32,8 @@ module Restspec::Schema::Types
     one_of: OneOfType,
     hash: HashType,
     null: NullType,
-    embedded_schema: EmbeddedSchemaType
+    embedded_schema: EmbeddedSchemaType,
+    date: DateType,
+    datetime: DateTimeType
   }
 end
