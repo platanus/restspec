@@ -110,9 +110,12 @@ module Restspec
           value_or_type = value_or_type_context.instance_eval(&value_or_type_block)
 
           if value_or_type.is_a?(Restspec::Schema::Types::BasicType)
-            attribute = endpoint.schema.attributes[param] || begin
+            attribute = if endpoint.schema && endpoint.schema.attributes[param]
+              endpoint.schema.attributes[param]
+            else
               Restspec::Schema::Attribute.new(param, value_or_type_context.integer)
             end
+
             value_or_type.example_for(attribute)
           else
             value_or_type

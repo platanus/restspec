@@ -1,7 +1,6 @@
 # For 0.1 (First Release)
 - Restore `before_test` behavior.
 - Add tests for all the classes or at least 70% of the code.
-- Make a complete README.
 
 # For 0.1.1
 - 100% Test coverage.

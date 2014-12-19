@@ -8,7 +8,8 @@ module Restspec
       end
 
       def get(namespace_name)
-        find { |ns| ns.name == namespace_name }
+        possible_names = [namespace_name.to_s, namespace_name.to_sym]
+        find { |ns| possible_names.include?(ns.name) }
       end
     end
 

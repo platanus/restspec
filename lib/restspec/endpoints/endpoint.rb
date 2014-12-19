@@ -31,11 +31,18 @@ module Restspec
       end
 
       def schema_name
-        @schema_name || namespace.schema_name
+        @schema_name || namespace.try(:schema_name)
       end
 
       def schema
-        @schema ||= schema_from_store.clone.extend_with(schema_extensions || {})
+        @schema ||= begin
+          found_schema = schema_from_store
+          if found_schema.present?
+            found_schema.clone.extend_with(schema_extensions || {})
+          else
+            nil
+          end
+        end
       end
 
       def full_path
