@@ -1,6 +1,5 @@
 # For 0.0.x
 - 100% Test coverage.
-- Add date and datetime type.
 - Schemas mixins or/and schemas inheritance.
 ```ruby
 schema :coso do

@@ -75,4 +75,19 @@ describe SingleSchemaDSL do
       end
     end
   end
+
+  describe '#include_attributes' do
+
+    let(:dsl) { DSL.new }
+
+    before do
+      dsl.mixin :test_mixin do
+        attribute :test_attribute, string
+      end
+    end
+
+    it 'includes the attributes to the schema' do
+      
+    end
+  end
 end
