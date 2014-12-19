@@ -1,4 +1,4 @@
-# For 0.1.1
+# For 0.1.x
 - 100% Test coverage.
 - Include Travis.
 - Test the restspec binary.
