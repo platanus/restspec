@@ -1,5 +1,5 @@
 PATH
-  remote: ~/dev/projects/platanus/restspec
+  remote: ~/dev/projects/ruby/restspec
   specs:
     restspec (0.0.2)
       activesupport (~> 4.0)

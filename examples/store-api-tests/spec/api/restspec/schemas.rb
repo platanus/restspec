@@ -1,6 +1,6 @@
 mixin :timestamps do
-  attribute :created_at, datetime
-  attribute :updated_at, datetime
+  attribute :created_at, datetime, :for => [:checks]
+  attribute :updated_at, datetime, :for => [:checks]
 end
 
 schema :product do

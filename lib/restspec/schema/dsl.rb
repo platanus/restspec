@@ -9,7 +9,7 @@ module Restspec
       end
 
       def schema(name, &definition)
-        dsl = SingleSchemaDSL.new(name)
+        dsl = SingleSchemaDSL.new(name, mixins)
         dsl.instance_eval(&definition)
         Restspec::SchemaStore.store(dsl.schema)
       end
@@ -22,7 +22,7 @@ module Restspec
     class SingleSchemaDSL
       attr_reader :schema, :mixins
 
-      def initialize(name, mixins = [])
+      def initialize(name, mixins = {})
         self.schema = Schema.new(name)
         self.mixins = mixins
       end

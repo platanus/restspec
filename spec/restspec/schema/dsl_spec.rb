@@ -77,17 +77,18 @@ describe SingleSchemaDSL do
   end
 
   describe '#include_attributes' do
-
-    let(:dsl) { DSL.new }
+    let(:main_dsl) { DSL.new }
+    let(:schema_dsl) { SingleSchemaDSL.new(:name, main_dsl.mixins) }
 
     before do
-      dsl.mixin :test_mixin do
+      main_dsl.mixin :test_mixin do
         attribute :test_attribute, string
       end
     end
 
     it 'includes the attributes to the schema' do
-      
+      schema_dsl.include_attributes(:test_mixin)
+      expect(schema_dsl.schema.attributes).to have_key('test_attribute')
     end
   end
 end
