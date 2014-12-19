@@ -100,7 +100,7 @@ RSpec.describe :books do
   endpoint 'books/index' do
     test do
       before_test do
-        3.times { call_endpoint('books/create') }
+        3.times { call_endpoint('books/create', body: schema_example(:book)) }
       end
 
       within_response do

@@ -7,7 +7,7 @@ module Restspec
         call_endpoint(endpoint_full_name, options).read_body
       end
 
-      def call_endpoint(endpoint_full_name, body: {},
+      def call_endpoint(endpoint_full_name = nil, body: {},
                                             url_params: {},
                                             query_params: {},
                                             merge_example_params: true,
@@ -31,7 +31,7 @@ module Restspec
             Restspec::EndpointStore.get(endpoint_full_name)
           end
         else
-          @endpoint
+          endpoint
         end
       end
 

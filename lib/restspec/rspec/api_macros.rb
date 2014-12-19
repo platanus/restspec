@@ -18,6 +18,7 @@ module Restspec
 
       def test(message = 'the happy path', options = {}, &test_body)
         endpoint_context = self
+        endpoint_context.metadata[:before_callbacks] = []
 
         context(message, options) do
           test_context = self
@@ -51,13 +52,17 @@ module Restspec
 
           let(:execute_endpoint_lambda) do
             resource_params = resource_endpoint.try(:url_params) || {}
+            before_callbacks = test_context.metadata[:before_callbacks]
 
             -> do
               endpoint.execute_once(
                 body: payload.merge(@payload || {}),
                 url_params: url_params.merge(resource_params).merge(@url_params || {}),
                 query_params: query_params.merge(@query_params || {}),
-                before: ->{ initial_resource }
+                before: ->do
+                  before_callbacks.each { |callback| instance_eval(&callback) }
+                  initial_resource
+                end
               )
             end
           end
@@ -80,6 +85,10 @@ module Restspec
 
           instance_eval(&test_body)
         end
+      end
+
+      def before_test(&block)
+        metadata[:before_callbacks] << block
       end
 
       def payload(params = {}, &payload_block)
