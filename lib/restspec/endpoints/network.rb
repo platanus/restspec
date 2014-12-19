@@ -15,7 +15,7 @@ module Restspec
       end
 
       def network_adapter_lambda
-        Restspec.config.request.network_adapter
+        Restspec.config.request.try(:network_adapter)
       end
 
       def default_network_adapter

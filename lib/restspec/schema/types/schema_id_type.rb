@@ -21,6 +21,9 @@ module Restspec::Schema::Types
           raise "We couldn't fetch any information for this example"
         }
       end
+    rescue URI::InvalidURIError, Errno::ECONNREFUSED => e
+      puts "WARNING: Error calling api #{e}. Falling back to use a number."
+      Faker::Number.digit
     end
 
     def valid?(attribute, value)

@@ -11,3 +11,6 @@
     + Generate whatever kind of markdown.
     + Generate Apiary Apib type.
     + Add a way to add texts to some points of the documentation.
+    + TODO:
+        * Untie Schema for Schema Response Body. DELETEs don't return string, they usually returns NO CONTENT. Indeed: nothing.
+        * Allow using a TITLE.

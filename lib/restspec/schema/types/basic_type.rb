@@ -21,6 +21,10 @@ class Restspec::Schema::Types::BasicType
     end
   end
 
+  def to_s
+    self.class.name.demodulize.gsub(/Type$/, "").underscore
+  end
+
   private
 
   attr_accessor :options, :disjuction, :parameterized_type

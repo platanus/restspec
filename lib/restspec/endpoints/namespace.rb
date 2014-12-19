@@ -34,6 +34,10 @@ module Restspec
         search_internal_endpoint(endpoint_name) || search_child_endpoint(endpoint_name)
       end
 
+      def all_endpoints
+        endpoints + children_namespaces.map { |ns| ns.all_endpoints }.flatten
+      end
+
       def top_level_namespace?
         parent_namespace.nil?
       end
