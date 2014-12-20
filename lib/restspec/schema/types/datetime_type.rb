@@ -6,15 +6,17 @@ module Restspec::Schema::Types
 
     def valid?(attribute, value)
       return false unless value.present?
-      DateTime.parse(value).strftime(date_time_format) == value
+      allowed_date_time_formats.any? do |format|
+        DateTime.parse(value).strftime(format) == value
+      end
     rescue ArgumentError
       false
     end
 
     private
 
-    def date_time_format
-      schema_options.fetch(:format, '%Y-%m-%dT%H:%M:%S.%LZ')
+    def allowed_date_time_formats
+      ['%Y-%m-%dT%H:%M:%S.%LZ', '%Y-%m-%dT%H:%M:%S%Z']
     end
 
     def initial_example_interval
