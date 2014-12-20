@@ -18,7 +18,7 @@ module Restspec
       end
 
       def add_anonymous_children_namespace
-        anonymous_namespace = Namespace.create
+        anonymous_namespace = Namespace.new('')
         anonymous_namespace.parent_namespace = self
         children_namespaces << anonymous_namespace
         anonymous_namespace

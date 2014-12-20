@@ -25,6 +25,12 @@ describe Namespace do
         namespace.children_namespaces.size
       }.by(1)
     end
+
+    it "doesn't add a namespace to the namespace store" do
+      expect { namespace.add_anonymous_children_namespace }.to_not change {
+        Restspec::NamespaceStore.size
+      }
+    end
   end
 
   describe '#add_endpoint' do

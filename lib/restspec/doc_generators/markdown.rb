@@ -10,9 +10,9 @@ module Restspec
       def generate
         generate_app_header
 
-        ns_store.each do |ns|
-          markdown_string << "## #{ns.name.capitalize}\n"
-          generate_endpoints(ns)
+        namespace_store.each do |namespace|
+          markdown_string << "## #{namespace.name.capitalize}\n"
+          generate_endpoints(namespace)
           markdown_string << "\n"
         end
 
@@ -27,8 +27,8 @@ module Restspec
         markdown_string << "# API\n\n"
       end
 
-      def generate_endpoints(ns)
-        ns.all_endpoints.each do |endpoint|
+      def generate_endpoints(namespace)
+        namespace.all_endpoints.each do |endpoint|
           markdown_string << "### #{endpoint.name.capitalize} [#{endpoint.method.upcase} #{endpoint.full_path}]\n"
           markdown_string << "Returns schema **#{endpoint.schema_name}**:\n"
 
@@ -49,8 +49,8 @@ module Restspec
 }\n\n"
       end
 
-      def ns_store
-        Restspec::NamespaceStore.uniq { |ns| ns.name }
+      def namespace_store
+        Restspec::NamespaceStore
       end
 
       def endpoints_store
