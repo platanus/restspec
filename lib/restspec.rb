@@ -4,6 +4,7 @@ module Restspec
 end
 
 require 'active_support/core_ext/object'
+require 'active_support/json'
 
 require "restspec/values/status_code"
 require "restspec/values/super_hash"
