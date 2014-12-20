@@ -1,11 +1,5 @@
 # For 0.0.x
 - 100% Test coverage.
-- Schemas mixins or/and schemas inheritance.
-```ruby
-schema :coso do
-  include_attributes :timestamps
-end
-```
 - Find a way to avoid example value clashes when using resource tests.
 
 # For 0.1 (They require more thoughts)
