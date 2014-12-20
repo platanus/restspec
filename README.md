@@ -186,4 +186,4 @@ Because the scope of this library is not small, we couldn't make a first release
 
 ## Contribute
 
-Please be sure to have the [EditorConfig](http://editorconfig.org/) plugin in your text editor to follow the guidelines proposed in the [.editorconfig](https://github.com/platanus/restspec/blob/master/.editorconfig) file. To contribute, please send us a PR and make sure that the current tests keeps working after that. You can help to complete the unit tests too. Anyway, when we have all tests together, we should have Travis working, but, right now, it's ok for us to just test the PR before going on.
+Please be sure to have the [EditorConfig](http://editorconfig.org/) plugin in your text editor to follow the guidelines proposed in the [.editorconfig](https://github.com/platanus/restspec/blob/master/.editorconfig) file. To contribute, please send us a PR and make sure that the current tests keeps working after that. You can help to complete the unit tests too.
