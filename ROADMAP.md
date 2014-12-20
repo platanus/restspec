@@ -1,5 +1,4 @@
 # For 0.0.x
-- Don't save member and collection into namespace_store.
 - 100% Test coverage.
 - Find a way to avoid example value clashes when using resource tests.
 
