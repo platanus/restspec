@@ -1,0 +1,22 @@
+# API
+## Hello World
+
+<% namespace_store.each do |namespace| %>
+## <%= namespace.name.capitalize %>
+
+<% namespace.all_endpoints.each do |endpoint| %>
+### <%= endpoint.name.capitalize %> [<%= endpoint.method.upcase %> <%= endpoint.full_path %>]
+
+Returns schema **<%= endpoint.schema_name %>**
+
+<% schema = schema_store.get(endpoint.schema_name) %>
+
+|  Attribute  |             Type           |     Example    |
+|-------------|:--------------------------:|---------------:|
+<% schema.attributes.each do |name, attribute| %>
+| <%= name %> | <%= attribute.type.to_s %> | <%= attribute.type.example_for(attribute) %> |
+<% end %>
+
+<% end %>
+
+<% end %>
