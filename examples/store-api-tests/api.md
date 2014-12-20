@@ -10,13 +10,13 @@ Returns schema **product**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | non |
-| code | string | exercitationem |
-| price | decimal | 96.51 |
-| category_id | schema_id | 99 |
-| category | embedded_schema | {:name=>"quo"} |
-| created_at | date_time | 2014-11-25T06:02:13-05:00 |
-| updated_at | date_time | 2014-12-11T22:12:56-05:00 |
+| name | string | libero |
+| code | string | expedita |
+| price | decimal | 49.18 |
+| category_id | schema_id | 1 |
+| category | embedded_schema | {:name=>"rerum"} |
+| created_at | date_time | 2014-12-15T12:37:23-05:00 |
+| updated_at | date_time | 2014-12-14T18:01:19-05:00 |
 
 ### Index [GET /products]
 
@@ -25,13 +25,13 @@ Returns schema **product**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | et |
-| code | string | ratione |
-| price | decimal | 73.77 |
-| category_id | schema_id | 99 |
-| category | embedded_schema | {:name=>"voluptatum"} |
-| created_at | date_time | 2014-11-20T05:45:58-05:00 |
-| updated_at | date_time | 2014-12-12T07:54:57-05:00 |
+| name | string | voluptatum |
+| code | string | blanditiis |
+| price | decimal | 77.09 |
+| category_id | schema_id | 2 |
+| category | embedded_schema | {:name=>"ipsam"} |
+| created_at | date_time | 2014-12-11T18:07:45-05:00 |
+| updated_at | date_time | 2014-12-20T22:30:23-05:00 |
 
 ### Show [GET /products/:id]
 
@@ -40,13 +40,13 @@ Returns schema **product**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | debitis |
-| code | string | rem |
-| price | decimal | 74.36 |
-| category_id | schema_id | 99 |
-| category | embedded_schema | {:name=>"sunt"} |
-| created_at | date_time | 2014-12-11T02:13:57-05:00 |
-| updated_at | date_time | 2014-12-18T20:15:50-05:00 |
+| name | string | distinctio |
+| code | string | blanditiis |
+| price | decimal | 55.84 |
+| category_id | schema_id | 4 |
+| category | embedded_schema | {:name=>"iure"} |
+| created_at | date_time | 2014-12-07T13:39:53-05:00 |
+| updated_at | date_time | 2014-12-07T13:45:22-05:00 |
 
 ### Update [PUT /products/:id]
 
@@ -55,13 +55,13 @@ Returns schema **product**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | possimus |
-| code | string | dolores |
-| price | decimal | 31.17 |
-| category_id | schema_id | 99 |
-| category | embedded_schema | {:name=>"voluptate"} |
-| created_at | date_time | 2014-12-10T17:43:00-05:00 |
-| updated_at | date_time | 2014-12-20T16:59:05-05:00 |
+| name | string | sit |
+| code | string | ut |
+| price | decimal | 85.80 |
+| category_id | schema_id | 5 |
+| category | embedded_schema | {:name=>"qui"} |
+| created_at | date_time | 2014-12-02T15:11:53-05:00 |
+| updated_at | date_time | 2014-11-29T13:55:04-05:00 |
 
 ### Destroy [DELETE /products/:id]
 
@@ -70,13 +70,13 @@ Returns schema **product**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | consectetur |
-| code | string | suscipit |
-| price | decimal | 25.78 |
-| category_id | schema_id | 99 |
-| category | embedded_schema | {:name=>"aut"} |
-| created_at | date_time | 2014-12-09T08:39:31-05:00 |
-| updated_at | date_time | 2014-11-29T08:33:43-05:00 |
+| name | string | aut |
+| code | string | illo |
+| price | decimal | 81.59 |
+| category_id | schema_id | 3 |
+| category | embedded_schema | {:name=>"quis"} |
+| created_at | date_time | 2014-11-25T07:30:09-05:00 |
+| updated_at | date_time | 2014-11-30T22:45:02-05:00 |
 
 
 ## Categories
@@ -88,7 +88,7 @@ Returns schema **category**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | pariatur |
+| name | string | voluptate |
 
 ### Index [GET /categories]
 
@@ -97,7 +97,7 @@ Returns schema **category**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | veritatis |
+| name | string | odit |
 
 ### Show [GET /categories/:id]
 
@@ -106,7 +106,7 @@ Returns schema **category**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | iure |
+| name | string | explicabo |
 
 ### Update [PUT /categories/:id]
 
@@ -115,7 +115,7 @@ Returns schema **category**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | odio |
+| name | string | quos |
 
 ### Destroy [DELETE /categories/:id]
 
@@ -124,7 +124,7 @@ Returns schema **category**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | id |
+| name | string | fuga |
 
 ### Products [GET /categories/:id/products]
 
@@ -133,12 +133,12 @@ Returns schema **product**
 
 |  Attribute  |             Type           |     Example    |
 |-------------|:--------------------------:|---------------:|
-| name | string | minus |
-| code | string | possimus |
-| price | decimal | 22.93 |
-| category_id | schema_id | 99 |
-| category | embedded_schema | {:name=>"impedit"} |
-| created_at | date_time | 2014-11-21T17:27:16-05:00 |
-| updated_at | date_time | 2014-11-26T15:38:02-05:00 |
+| name | string | eos |
+| code | string | odit |
+| price | decimal | 41.37 |
+| category_id | schema_id | 8 |
+| category | embedded_schema | {:name=>"et"} |
+| created_at | date_time | 2014-11-24T12:34:34-05:00 |
+| updated_at | date_time | 2014-11-25T02:07:06-05:00 |
 
 
