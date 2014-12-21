@@ -180,9 +180,13 @@ endpoint 'products/create' do
 end
 ```
 
-## A note about the Roadmap
+## If you have some issue
 
-Because the scope of this library is not small, we couldn't make a first release as small as we are acostumed. Anyway, we love to be able to deliver in small iterations, so there a [ROADMAP](https://github.com/platanus/restspec/blob/master/ROADMAP.md) file that we use to keep track of the objectives that we have. Althought many of the objectives of the gem are already done, there are more objectives that will expect to the following releases.
+Be sure to add your issue with a `bug` label or the `question` one.
+
+## A note about SemVer
+
+We are using SemVer from 0.0.4 onwards. Versions before 0.0.4 doesn't use Semver and they add some features (intended for MINOR releases, not for PATCH releases). With the addition of 0.0.5, we will be using a CHANGELOG.md file with the track of the commits that made their way to that version.
 
 ## Contribute
 
