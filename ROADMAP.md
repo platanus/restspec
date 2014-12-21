@@ -2,10 +2,15 @@
 - 100% Test coverage.
 - Find a way to avoid example value clashes when using resource tests.
 - Document DateType and DateTimeType
-- Auto-Payload:
-    + {deduce_payload: true} option
-    + Post and Put Requests should have deduce_payload set to true by default.
-    + deduce_payload should not fail if no schema is found
+- Divide the attachment between an endpoint and a schema, allowing to specify the role of the schema as a payload and the role of the schema as a response:
+    + This should be something like this:
+        ```ruby
+        schema :product, :for => [:payload, :response]
+        ```
+    + When the schema is inherited from the namespace, the `:for` option will default to `[:response]`
+    + The endpoint with a schema for payload will use this schema for the `payload` option for the endpoint.
+    + The execution of the endpoint with an internal `payload` won't used the internal `payload` if an actual `payload` was passed as a parameter. The parameter will override the `payload`.
+    + The endpoint with a schema for response will use the schema for matchers like `be_like_schema` and `be_like_schema_array`. Otherwise, it will not default to it.
 
 # For 0.1 (They require more thoughts)
 - Research pagination strategies and integrating them with `schema_id`.
