@@ -2,6 +2,10 @@
 - 100% Test coverage.
 - Find a way to avoid example value clashes when using resource tests.
 - Document DateType and DateTimeType
+- Auto-Payload:
+    + {deduce_payload: true} option
+    + Post and Put Requests should have deduce_payload set to true by default.
+    + deduce_payload should not fail if no schema is found
 
 # For 0.1 (They require more thoughts)
 - Research pagination strategies and integrating them with `schema_id`.
@@ -10,4 +14,4 @@
     + Add a way to add texts to some points of the documentation.
     + TODO:
         * Untie Schema for Schema Response Body. DELETEs don't return string, they usually returns NO CONTENT. Indeed: nothing.
-        * Allow using a TITLE.
+        * Find a way to add data to the schemas and endpoints for the documentation.
