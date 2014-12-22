@@ -24,7 +24,7 @@ $ tree
 
 ```
 
-If you're familiar with the regular use of RSpec, this initial structure should look normal except from the the files in the `api/restspec` folder.
+If you're familiar with the regular use of RSpec, this initial structure should look normal except for the files in the `api/restspec` folder.
 
 - **endpoints.rb**: This is the place to describe your endpoints. One important thing is that your tests **won't define your endpoints**. In this way, we have a graph of the structure of your api *always* and this can help you to visualize your api structure and create better matchers.
 - **schemas.rb**: The schemas are the shape of the resources you are manipulating in the api. It's a centralized place to put how your data should be.
