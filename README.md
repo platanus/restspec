@@ -11,7 +11,7 @@ Install it globally like this:
 
 ## Usage
 
-For a basic tutorial of how to use Restspec, please check [this file](https://github.com/platanus/restspec/blob/master/docs/tutorial.md).
+For a basic tutorial of how to use Restspec, please check [this file](https://github.com/platanus/restspec/blob/master/guides/tutorial.md).
 
 ### The Restspec Approach
 
@@ -72,7 +72,7 @@ resources :products do
 end
 ```
 
-Check the endpoint DSL documentation [here](https://github.com/platanus/restspec/blob/master/docs/endpoints.md) for more details of the available methods and options. The only important thing about them is that they are the endpoints we have to test.
+Check the endpoint DSL documentation [here](https://github.com/platanus/restspec/blob/master/guides/endpoints.md) for more details of the available methods and options. The only important thing about them is that they are the endpoints we have to test.
 
 ### Schemas
 
@@ -92,9 +92,9 @@ schema :category do
 end
 ```
 
-As you can see, a schema is compound of attributes that are attached to one type. The types are useful for many things. The types documentation is located [here](https://github.com/platanus/restspec/blob/master/docs/types.md).
+As you can see, a schema is compound of attributes that are attached to one type. The types are useful for many things. The types documentation is located [here](https://github.com/platanus/restspec/blob/master/guides/types.md).
 
-The schemas DSL documentation is located [here](https://github.com/platanus/restspec/blob/master/docs/schemas.md). Schemas are a very important part of Restspec but they are not as necesary as the endpoints.
+The schemas DSL documentation is located [here](https://github.com/platanus/restspec/blob/master/guides/schemas.md). Schemas are a very important part of Restspec but they are not as necesary as the endpoints.
 
 ### Tests
 
@@ -155,7 +155,7 @@ endpoint 'products/update', resource: 'products/show' do
 end
 ```
 
-For more information about what can you do in your tests, you can see what are the [available matchers](https://github.com/platanus/restspec/blob/master/docs/matchers.md), the [available helpers](https://github.com/platanus/restspec/blob/master/docs/helpers.md) and the [available macros](https://github.com/platanus/restspec/blob/master/docs/macros.md).
+For more information about what can you do in your tests, you can see what are the [available matchers](https://github.com/platanus/restspec/blob/master/guides/matchers.md), the [available helpers](https://github.com/platanus/restspec/blob/master/guides/helpers.md) and the [available macros](https://github.com/platanus/restspec/blob/master/guides/macros.md).
 
 ### Requirements
 
