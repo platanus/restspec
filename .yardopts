@@ -1,0 +1,5 @@
+--protected
+--markup markdown
+--no-private
+--exclude runners/docs/templates/
+--exclude runners/install/templates/
