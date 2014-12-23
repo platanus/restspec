@@ -25,7 +25,7 @@ module Restspec
       # end
       # ```
       #
-      # @param request [Restspec::Endpoints::Request] the request to make.
+      # @param request_object [Restspec::Endpoints::Request] the request to make.
       # @return [Restspec::Endpoints::Response] the response from the wire.
       def request(request_object)
         code, headers, body = network_adapter.request(request_object)
