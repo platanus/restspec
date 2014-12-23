@@ -25,19 +25,20 @@ module Restspec
       attr_reader :name, :type
 
       # Creates an attribute. It uses an identifier (name), an instance
-      # of a subclass of {Restspec::Schema::Types::BasicType} and
-      # the possible following set of options:
-      #
-      # - **example**: A callable object (eg: a lambda) that returns something.
-      # - **for**: Defines what abilities this attributes has.
-      #   This is an array of the symbols `:checks` and `:examples`. This option
-      #   defaults to `[:checks, :examples]`, allowing the attribute to be used
-      #   for run validations from {Checker#check!} and for generating examples from {SchemaExample#value}.
+      # of a subclass of {Restspec::Schema::Types::BasicType} and a set
+      # of options.
       #
       # @param name the name of the attribute
       # @param type an instance of a subclass of {Restspec::Schema::Types::BasicType} that
       #   works like the type of this attribute, allowing the type to generate examples and
       #   run validations based on this attribute.
+      # @param options, that can be the following:
+      #   - **example**: A callable object (eg: a lambda) that returns something.
+      #   - **for**: Defines what abilities this attributes has.
+      #     This is an array that can contains none, some or all the symbols
+      #     `:checks` and `:examples`. This option defaults to `[:checks, :examples]`,
+      #     allowing the attribute to be used for run validations from {Checker#check!}
+      #     and for generating examples from {SchemaExample#value}.
       # @return A new instance of Attribtue.
       def initialize(name, type, options = {})
         self.name = name

@@ -78,7 +78,7 @@ describe SingleSchemaDSL do
 
   describe '#include_attributes' do
     let(:main_dsl) { DSL.new }
-    let(:schema_dsl) { SingleSchemaDSL.new(:name, main_dsl.mixins) }
+    let(:schema_dsl) { SingleSchemaDSL.new(:name, main_dsl.send(:mixins)) }
 
     before do
       main_dsl.mixin :test_mixin do
