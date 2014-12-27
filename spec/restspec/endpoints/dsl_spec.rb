@@ -209,6 +209,14 @@ describe Restspec::Endpoints::DSL do
       end
     end
 
+    describe '#no_schema' do
+      it 'removes the schema' do
+        endpoint_dsl.schema :monkey
+        endpoint_dsl.no_schema
+        expect(endpoint.all_schemas).to eq([])
+      end
+    end
+
     describe '#schema' do
       it 'sets the schema for response' do
         expect {
