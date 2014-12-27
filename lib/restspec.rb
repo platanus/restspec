@@ -29,6 +29,7 @@ require "restspec/endpoints/response"
 require "restspec/endpoints/network"
 require "restspec/endpoints/endpoint"
 require "restspec/endpoints/namespace"
+require "restspec/endpoints/url_builder"
 
 require "restspec/requirements/dsl"
 require "restspec/requirements/requirement"
