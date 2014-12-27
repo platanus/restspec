@@ -1,8 +1,9 @@
 module Restspec
   module Endpoints
     class Namespace
-      attr_accessor :base_path, :parent_namespace, :children_namespaces, :schema_extensions
-      attr_writer :schema_name
+      include HasSchemas
+
+      attr_accessor :base_path, :parent_namespace, :children_namespaces
       attr_reader :endpoints
 
       def self.create(name)
@@ -48,10 +49,6 @@ module Restspec
         else
           parent_namespace.full_base_path + base_path
         end
-      end
-
-      def schema_name
-        @schema_name || parent_namespace.try(:schema_name)
       end
 
       def name

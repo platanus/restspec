@@ -44,6 +44,11 @@ describe Restspec::Endpoints::DSL do
   end
 
   describe '#resource' do
+    before do
+      schema = Restspec::Schema::Schema.new(:monkey)
+      Restspec::SchemaStore.store(schema)
+    end
+
     it 'creates a namespace with the base_path equals to /:name' do
       dsl.resource(:monkeys) { }
       expect(Restspec::NamespaceStore.get(:monkeys).full_base_path).to eq('/monkeys')
@@ -51,7 +56,7 @@ describe Restspec::Endpoints::DSL do
 
     it 'creates a namespace with the schema attached to some schema with the same name' do
       dsl.resource(:monkeys) { }
-      expect(Restspec::NamespaceStore.get(:monkeys).schema_name).to eq(:monkey)
+      expect(Restspec::NamespaceStore.get(:monkeys).schema_for(:response).name).to eq(:monkey)
     end
   end
 
@@ -86,14 +91,22 @@ describe Restspec::Endpoints::DSL do
     end
 
     describe '#schema' do
+      before do
+        Restspec::SchemaStore.store(Restspec::Schema::Schema.new(:schema_name))
+      end
+
       it 'sets the schema_name of the namespace' do
         expect do
           ns_dsl.schema :schema_name
-        end.to change { namespace.schema_name }.to(:schema_name)
+        end.to change { namespace.schema_for(:response).try(:name) }.to(:schema_name)
       end
     end
 
     describe '#all' do
+      before do
+        Restspec::SchemaStore.store(Restspec::Schema::Schema.new(:a_schema_name))
+      end
+
       it 'calls the same block in all the endpoints inside' do
         ns_dsl.all do
           schema :a_schema_name
@@ -105,8 +118,8 @@ describe Restspec::Endpoints::DSL do
         endpoint_a = Restspec::EndpointStore.get('monkeys/a')
         endpoint_b = Restspec::EndpointStore.get('monkeys/b')
 
-        expect(endpoint_a.schema_name).to eq(:a_schema_name)
-        expect(endpoint_b.schema_name).to eq(:a_schema_name)
+        expect(endpoint_a.schema_for(:response).name).to eq(:a_schema_name)
+        expect(endpoint_a.schema_for(:response).name).to eq(:a_schema_name)
       end
     end
 
@@ -197,18 +210,10 @@ describe Restspec::Endpoints::DSL do
     end
 
     describe '#schema' do
-      it 'sets the schema_name' do
+      it 'sets the schema for response' do
         expect {
           endpoint_dsl.schema :monkey
-        }.to change { endpoint.schema_name }.from(nil).to(:monkey)
-      end
-
-      it 'sets the schema_name with schema_extensions' do
-        extensions = { a: 1, b: 2, c: 3 }
-
-        expect {
-          endpoint_dsl.schema :monkey, extensions
-        }.to change { endpoint.schema_extensions }.from(nil).to(extensions)
+        }.to change { endpoint.schema_for(:response).try(:name) }.from(nil).to(:monkey)
       end
     end
 
@@ -250,7 +255,7 @@ describe Restspec::Endpoints::DSL do
           let(:schema) { double(attributes: { param: 1 }) }
 
           before do
-            allow(endpoint).to receive(:schema).and_return(schema)
+            allow(endpoint).to receive(:schema_for).and_return(schema)
           end
 
           it 'calls the example_for with the attribute from the schema' do

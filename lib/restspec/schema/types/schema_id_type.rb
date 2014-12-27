@@ -37,7 +37,7 @@ module Restspec::Schema::Types
 
     def get_index_endpoint
       if schema_name.present?
-        Restspec::EndpointStore.get_by_schema_and_name(schema_name, :index)
+        Restspec::EndpointStore.get_by_schema_name_and_role(schema_name, :index, :response)
       else
         find_endpoint(example_options.fetch(:fetch_endpoint))
       end
@@ -54,8 +54,7 @@ module Restspec::Schema::Types
 
     def get_create_endpoint
       if schema_name.present?
-        namespace = Restspec::Endpoints::Namespace.get_by_schema_name(schema_name)
-        namespace.get_endpoint(:create)
+        Restspec::EndpointStore.get_by_schema_name_and_role(schema_name, :create, :payload)
       else
         find_endpoint(example_options.fetch(:create_endpoint))
       end

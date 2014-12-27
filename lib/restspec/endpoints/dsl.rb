@@ -40,19 +40,17 @@ module Restspec
       #
       # @example
       #   resource :books do
-      #     namespace.schema_name # book
+      #     namespace.schema_for(:response).name # book
       #     namespace.base_path # /books
       #   end
       #
       # @param (see #namespace)
       #
       def resource(name, base_path: nil, &block)
-        namespace name, base_path: (base_path || "/#{name}") do
-          if self.namespace.schema_name.blank?
-            schema_name = name.to_s.singularize
-            schema(schema_name.to_sym)
-          end
+        resource_name = name.to_s.singularize.to_sym
 
+        namespace name, base_path: (base_path || "/#{name}") do
+          schema resource_name
           instance_eval(&block)
         end
       end
@@ -61,10 +59,11 @@ module Restspec
     # The Namespace DSL is what should be used inside a namespace or resource block.
     # Its major responsability is to add endpoints to the dsl.
     class NamespaceDSL
-      attr_accessor :namespace
+      attr_accessor :namespace, :endpoint_config_blocks
 
       def initialize(namespace)
         self.namespace = namespace
+        self.endpoint_config_blocks = []
       end
 
       # Defines a new endpoint with a name and a block
@@ -85,7 +84,10 @@ module Restspec
         namespace.add_endpoint(endpoint)
 
         endpoint_dsl.instance_eval(&block)
-        endpoint_dsl.instance_eval(&common_endpoints_config_block)
+
+        endpoint_config_blocks.each do |config_block|
+          endpoint_dsl.instance_eval(&config_block)
+        end
 
         Restspec::EndpointStore.store(endpoint)
       end
@@ -152,7 +154,9 @@ module Restspec
       def member(base_path: nil, identifier_name: 'id', &block)
         member_namespace = namespace.add_anonymous_children_namespace
         member_namespace.base_path = base_path || "/:#{identifier_name}"
-        NamespaceDSL.new(member_namespace).instance_eval(&block)
+        member_dsl = NamespaceDSL.new(member_namespace)
+        member_dsl.endpoint_config_blocks += endpoint_config_blocks
+        member_dsl.instance_eval(&block)
       end
 
       # This defines an anonymous namespace with a base_path equals
@@ -174,7 +178,9 @@ module Restspec
       def collection(base_path: nil, &block)
         collection_namespace = namespace.add_anonymous_children_namespace
         collection_namespace.base_path = base_path
-        NamespaceDSL.new(collection_namespace).instance_eval(&block)
+        collection_dsl = NamespaceDSL.new(collection_namespace)
+        collection_dsl.endpoint_config_blocks += endpoint_config_blocks
+        collection_dsl.instance_eval(&block)
       end
 
       # It attaches a schema to the namespace. This schema name will be
@@ -186,10 +192,10 @@ module Restspec
       #   end
       #
       # @param name [Symbol] the schema name.
-      # @param schema_extensions [Hash] extensions to be passed with the schema. See the {Restspec::Schema::Schema#extend_with} method for options.
-      def schema(name, schema_extensions = {})
-        namespace.schema_name = name
-        namespace.schema_extensions = schema_extensions
+      # @param options [Hash] A set of options to pass to {Endpoint#add_schema}.
+      def schema(name, options = {})
+        namespace.add_schema(name, options)
+        all { schema(name, options) }
       end
 
       # Defines a block that will be executed in every endpoint inside this namespace.
@@ -210,7 +216,7 @@ module Restspec
       # @param endpoints_config [block] block that will be called in the context of
       #   an {EndpointDSL} instance.
       def all(&endpoints_config)
-        self.common_endpoints_config_block = endpoints_config
+        self.endpoint_config_blocks << endpoints_config
       end
 
       # It calls {#all} with the {EndpointDSL#url_param} method.
@@ -223,18 +229,12 @@ module Restspec
 
       private
 
-      attr_accessor :common_endpoints_config_block
-
       def setup_endpoint_from_http_method(http_method, endpoint_name, path, &block)
         endpoint(endpoint_name) do
           self.method http_method
           self.path path
           instance_eval(&block) if block.present?
         end
-      end
-
-      def common_endpoints_config_block
-        @common_endpoints_config_block ||= (Proc.new {})
       end
     end
 
@@ -274,13 +274,15 @@ module Restspec
       #     schema :monkey
       #   end
       #
-      #
-      #
-      # @param name [Symbol] the schema's name.
-      # @param schema_extensions (see NamespaceDSL#schema)
-      def schema(name, schema_extensions = {})
-        endpoint.schema_name = name
-        endpoint.schema_extensions = schema_extensions
+      # @param name [Symbol] The schema's name.
+      # @param options [Hash] A set of options to pass to {Endpoint#add_schema}.
+      def schema(name, options = {})
+        endpoint.add_schema(name, options)
+      end
+
+      # TODO: Document and Test
+      def no_schema
+        endpoint.remove_schemas
       end
 
       # A mutable hash containing the headers for the endpoint
@@ -343,8 +345,8 @@ module Restspec
         end
 
         def get_attribute
-          if endpoint.schema && endpoint.schema.attributes[attribute_name]
-            endpoint.schema.attributes[attribute_name]
+          if (schema = endpoint.schema_for(:payload)).present? && schema.attributes[attribute_name]
+            schema.attributes[attribute_name]
           else
             Restspec::Schema::Attribute.new(attribute_name, context.integer)
           end
