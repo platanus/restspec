@@ -23,6 +23,10 @@ module Restspec
         end
       end
 
+      def all_schemas
+        schema_roles.values
+      end
+
       def remove_schemas
         schema_roles.clear
       end

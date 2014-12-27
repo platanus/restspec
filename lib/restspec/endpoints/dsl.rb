@@ -280,7 +280,15 @@ module Restspec
         endpoint.add_schema(name, options)
       end
 
-      # TODO: Document and Test
+      # Remove the schema of the current endpoint. Some endpoints
+      # doesn't require schemas for payload or for responses. This
+      # is the typical case for DELETE requests.
+      #
+      # @example
+      #   resource :game do
+      #     delete(:destroy) { no_schema }
+      #   end
+      #
       def no_schema
         endpoint.remove_schemas
       end

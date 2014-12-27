@@ -10,7 +10,7 @@ module Restspec
 
       def execute(body: {}, url_params: {}, query_params: {})
         url = URLBuilder.new(full_path, self.url_params.merge(url_params), query_params).full_url
-        request = Request.new(method, url, full_headers, body)
+        request = Request.new(method, url, full_headers, body || payload)
 
         Network.request(request).tap do |response|
           self.last_request = inject_self_into(response, :endpoint)
@@ -41,6 +41,10 @@ module Restspec
         @headers ||= {}
       end
 
+      def payload
+        @payload ||= internal_payload
+      end
+
       def url_params
         @url_params ||= URLBuilder.new(full_path, raw_url_params).url_params
       end
@@ -56,6 +60,16 @@ module Restspec
       private
 
       attr_writer :last_response, :last_request
+      attr_accessor :internal_payload
+
+      def internal_payload
+        schema = schema_for(:payload)
+        if schema.present?
+          Restspec::Schema::SchemaExample.new(schema).value
+        else
+          {}
+        end
+      end
 
       def inject_self_into(object, property)
         object.tap { object.send(:"#{property}=", self) }

@@ -3,8 +3,6 @@ require 'spec_helper'
 RSpec.describe :products, :type => :api do
   endpoint 'products/create' do
     test do
-      payload { schema_example(:product) }
-
       it { should have_status(:created) }
     end
   end

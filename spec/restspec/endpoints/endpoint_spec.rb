@@ -6,6 +6,25 @@ describe Endpoint do
   let(:endpoint) { Endpoint.new(:endpoint) }
   subject { endpoint }
 
+  describe '#payload' do
+    let(:schema) do
+      dsl = Restspec::Schema::SingleSchemaDSL.new(:product, {})
+      dsl.instance_eval do
+        attribute :title, string, example: 'monkey'
+      end
+      dsl.schema
+    end
+
+    before do
+      Restspec::SchemaStore.store(schema)
+      endpoint.add_schema(schema.name, :for => [:payload])
+    end
+
+    it 'is an example for the schema' do
+      expect(endpoint.payload).to eq(title: 'monkey')
+    end
+  end
+
   describe '#full_name' do
     context 'standalone' do
       its(:full_name) { should eq('endpoint') }
