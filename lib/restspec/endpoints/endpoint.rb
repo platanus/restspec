@@ -10,7 +10,7 @@ module Restspec
 
       def execute(body: {}, url_params: {}, query_params: {})
         url = URLBuilder.new(full_path, self.url_params.merge(url_params), query_params).full_url
-        request = Request.new(method, url, full_headers, body || internal_payload)
+        request = Request.new(method, url, full_headers, body || payload)
 
         Network.request(request).tap do |response|
           self.last_request = inject_self_into(response, :endpoint)
@@ -39,6 +39,10 @@ module Restspec
 
       def headers
         @headers ||= {}
+      end
+
+      def payload
+        @payload ||= internal_payload
       end
 
       def url_params
