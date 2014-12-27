@@ -16,13 +16,22 @@ describe "EndpointStore" do
     end
   end
 
-  describe '#get_by_schema_and_name' do
+  describe '#get_by_schema_name_and_role' do
+    before do
+      Restspec::SchemaStore.store(Restspec::Schema::Schema.new(:schema_name_1))
+      Restspec::SchemaStore.store(Restspec::Schema::Schema.new(:schema_name_2))
+    end
+
     let(:endpoint_1) do
-      OpenStruct.new(:full_name => :name_1, :schema_name => :schema_name_1, :name => :name_1)
+      Restspec::Endpoints::Endpoint.new(:name_1).tap do |endpoint|
+        endpoint.add_schema :schema_name_1, :for => [:response]
+      end
     end
 
     let(:endpoint_2) do
-      OpenStruct.new(:full_name => :name_2, :schema_name => :schema_name_2, :name => :name_2)
+      Restspec::Endpoints::Endpoint.new(:name_2).tap do |endpoint|
+        endpoint.add_schema :schema_name_2, :for => [:response]
+      end
     end
 
     before do
@@ -31,7 +40,9 @@ describe "EndpointStore" do
     end
 
     context 'without something with the same schema' do
-      let(:found_endpoint) { EndpointStore.get_by_schema_and_name(:schema_name_1, :name_2) }
+      let(:found_endpoint) do
+        EndpointStore.get_by_schema_name_and_role(:schema_name_1, :name_2, :response)
+      end
 
       it 'is nil' do
         expect(found_endpoint).to be_nil
@@ -39,7 +50,9 @@ describe "EndpointStore" do
     end
 
     context 'with something with the same schema and name' do
-      let(:found_endpoint) { EndpointStore.get_by_schema_and_name(:schema_name_1, :name_1) }
+      let(:found_endpoint) do
+        EndpointStore.get_by_schema_name_and_role(:schema_name_1, :name_1, :response)
+      end
 
       it 'is the correct endpoint' do
         expect(found_endpoint).to eq(endpoint_1)

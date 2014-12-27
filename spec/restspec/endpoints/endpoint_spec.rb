@@ -66,48 +66,6 @@ describe Endpoint do
     end
   end
 
-  describe '#schema_name' do
-    context 'stadalone' do
-      before { endpoint.schema_name = :schema_name }
-      its(:schema_name) { should eq(:schema_name) }
-    end
-
-    context 'inside a namespace' do
-      let(:namespace) do
-        Namespace.new(:namespace).tap do |ns|
-          ns.schema_name = :ns_schema_name
-        end
-      end
-
-      before { endpoint.namespace = namespace }
-
-      context 'without a single schema name' do
-        its(:schema_name) { should eq(:ns_schema_name) }
-      end
-
-      context 'with a single schema name' do
-        before { endpoint.schema_name = :single_schema_name }
-        its(:schema_name) { should eq(:single_schema_name) }
-      end
-    end
-  end
-
-  describe '#schema' do
-    let(:schema) { double }
-
-    before do
-      endpoint.schema_name = :single_schema_name
-      allow(Restspec::SchemaStore).to receive(:get).and_return(schema)
-      allow(schema).to receive(:extend_with) { schema }
-    end
-
-    it 'tells the Restspec::Schema::Finder to find a schema' do
-      found_schema = endpoint.schema
-      expect(Restspec::SchemaStore).to have_received(:get).with(:single_schema_name)
-      expect(found_schema).to eq(schema)
-    end
-  end
-
   describe '#url_params' do
     before do
       endpoint.add_url_param_block(:mono) { 'mono' }

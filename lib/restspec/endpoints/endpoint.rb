@@ -3,10 +3,10 @@ require 'httparty'
 module Restspec
   module Endpoints
     class Endpoint < Struct.new(:name)
-      attr_accessor :method, :path, :namespace, :raw_url_params, :schema_extensions
-      attr_reader :last_response, :last_request
+      include HasSchemas
 
-      attr_writer :schema_name
+      attr_accessor :method, :path, :namespace, :raw_url_params
+      attr_reader :last_response, :last_request
 
       def execute(body: {}, url_params: {}, query_params: {})
         url = URLBuilder.new(full_path, self.url_params.merge(url_params), query_params).full_url
@@ -27,21 +27,6 @@ module Restspec
 
       def full_name
         [namespace.try(:name), name].compact.join("/")
-      end
-
-      def schema_name
-        @schema_name || namespace.try(:schema_name)
-      end
-
-      def schema
-        @schema ||= begin
-          found_schema = schema_from_store
-          if found_schema.present?
-            found_schema.clone.extend_with(schema_extensions || {})
-          else
-            nil
-          end
-        end
       end
 
       def full_path
@@ -71,10 +56,6 @@ module Restspec
       private
 
       attr_writer :last_response, :last_request
-
-      def schema_from_store
-        Restspec::SchemaStore.get(schema_name)
-      end
 
       def inject_self_into(object, property)
         object.tap { object.send(:"#{property}=", self) }

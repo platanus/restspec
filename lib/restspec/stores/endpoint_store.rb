@@ -19,19 +19,19 @@ module Restspec
         self[endpoint_name]
       end
 
-      # Get an endpoint by the schema and the name.
+      # Get an endpoint by the schema, name and a role.
       #
       # @example
       #   # Let's assume in the store there are 3 endpoints
       #   # called :show, in different namespaces.
       #
-      #   Restspec::EndpointStore.get_by_schema_and_name(:book, :show)
-      #   # => this will only return the one whose schema is :book.
+      #   Restspec::EndpointStore.get_by_schema_name_and_role(:book, :show, :response)
+      #   # => this will only return the one whose schema is :book and are suitable for response.
       #
       # @return [Restspec::Endpoints::Endpoint, nil] the endpoint found.
-      def get_by_schema_and_name(schema_name, endpoint_name)
+      def get_by_schema_name_and_role(schema_name, endpoint_name, role)
         values.find do |endpoint|
-          endpoint.schema_name == schema_name && endpoint.name == endpoint_name
+          endpoint.name == endpoint_name && endpoint.schema_for(role).try(:name) == schema_name
         end
       end
     end

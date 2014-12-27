@@ -1,10 +1,11 @@
 resource :products do
-  schema :product
-
   collection do
-    post :create
+    post :create do
+      schema :product, :for => [:payload, :response]
+    end
+
     get :index do
-      schema :product, without: [:category]
+      schema :product, :for => [:response], :without => [:category]
     end
   end
 
@@ -13,7 +14,7 @@ resource :products do
 
     get :show
     put :update
-    delete :destroy
+    delete(:destroy) { no_schema }
   end
 end
 
