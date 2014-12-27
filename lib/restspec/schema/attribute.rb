@@ -32,7 +32,7 @@ module Restspec
       # @param type an instance of a subclass of {Restspec::Schema::Types::BasicType} that
       #   works like the type of this attribute, allowing the type to generate examples and
       #   run validations based on this attribute.
-      # @param options, that can be the following:
+      # @param options that can be the following:
       #   - **example**: A callable object (eg: a lambda) that returns something.
       #   - **for**: Defines what abilities this attributes has.
       #     This is an array that can contains none, some or all the symbols

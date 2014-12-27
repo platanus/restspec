@@ -10,13 +10,6 @@ describe Namespace do
       namespace = Namespace.create(:name)
       expect(Restspec::NamespaceStore.get(:name)).to eq(namespace)
     end
-
-    context 'without arguments' do
-      it 'creates an anonymous namespace' do
-        namespace = Namespace.create
-        expect(namespace).to be_anonymous
-      end
-    end
   end
 
   describe '#add_anonymous_children_namespace' do

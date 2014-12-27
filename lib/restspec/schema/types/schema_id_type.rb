@@ -1,29 +1,21 @@
 module Restspec::Schema::Types
   class SchemaIdType < BasicType
-    attr_accessor :schema_name
 
-    def initialize(options, options_when_name_is_present = {})
-      if options.is_a?(Symbol)
-        self.schema_name = options
-        super(options_when_name_is_present)
-      else
-        super(options)
-      end
+    def initialize(schema_name, options = {})
+      self.schema_name = schema_name
+      super(options)
     end
 
     def example_for(attribute)
       return sample_item.id if sample_item.present?
 
-      if create_response.code == 201 && create_response.body.try(:id)
+      if create_response.code == 201 && create_response.body.try(:id).present?
         create_response.body.id
       else
-        example_options.fetch(:hardcoded_fallback) {
-          raise "We couldn't fetch any information for this example"
-        }
+        hardcoded_fallback
       end
     rescue URI::InvalidURIError, Errno::ECONNREFUSED => e
-      puts "WARNING: Error calling api #{e}. Falling back to use a number."
-      Faker::Number.digit
+      hardcoded_fallback
     end
 
     def valid?(attribute, value)
@@ -32,6 +24,8 @@ module Restspec::Schema::Types
     end
 
     private
+
+    attr_accessor :schema_name
 
     def find_endpoint(name)
       Restspec::EndpointStore.get(name)
@@ -86,6 +80,10 @@ module Restspec::Schema::Types
     def item_ids
       fetch_endpoint = get_index_endpoint
       fetch_endpoint.execute.body
+    end
+
+    def hardcoded_fallback
+      example_options.fetch(:hardcoded_fallback, Faker::Number.digit)
     end
   end
 end

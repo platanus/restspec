@@ -61,6 +61,8 @@ module Restspec
     # a {DSL} instance block. It defines specific things of a
     # schema or a group of them.
     class SingleSchemaDSL
+      include Types::TypeMethods
+
       # @return {Schema} the current schema
       attr_reader :schema
 
@@ -93,12 +95,6 @@ module Restspec
       # @param name [Symbol] the mixin name
       def include_attributes(name)
         self.instance_eval &mixins.fetch(name)
-      end
-
-      Types::ALL.each do |type_name, type_class|
-        define_method(type_name) do |options = {}|
-          type_class.new(options)
-        end
       end
 
       private

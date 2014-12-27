@@ -14,7 +14,5 @@ schema :product do
 end
 
 schema :category do
-  include_attributes :timestamps
-
   attribute :name, string
 end

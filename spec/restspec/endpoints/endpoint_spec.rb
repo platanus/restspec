@@ -130,8 +130,8 @@ describe Endpoint do
     end
 
     context 'inside an anonymous namespace (a member or collection block)' do
-      let(:member_namespace) { Namespace.create }
       let(:top_level_namespace) { Namespace.create('top_level') }
+      let(:member_namespace) { top_level_namespace.add_anonymous_children_namespace }
 
       before do
         top_level_namespace.base_path = '/monkeys'

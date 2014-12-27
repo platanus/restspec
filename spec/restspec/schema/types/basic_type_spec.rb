@@ -13,7 +13,7 @@ describe BasicType do
   let(:attribute) { double }
   let(:value) { double }
 
-  describe '|' do
+  describe '#|' do
     let(:other_type) { subclass.new }
 
     before do
@@ -38,7 +38,7 @@ describe BasicType do
     end
   end
 
-  describe 'of' do
+  describe '#of' do
     let(:other_type) { subclass.new }
 
     let(:subclass) do

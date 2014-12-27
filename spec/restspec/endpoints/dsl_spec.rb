@@ -17,12 +17,12 @@ describe Restspec::Endpoints::DSL do
 
     it 'creates a namespace with the given name as a string' do
       dsl.namespace(:monkey) { }
-      expect(Restspec::NamespaceStore.first.name).to eq('monkey')
+      expect(Restspec::NamespaceStore.get(:monkey).name).to eq('monkey')
     end
 
     it 'creates a namespace with the given base_path' do
       dsl.namespace(:monkey, base_path: '/monkey') { }
-      expect(Restspec::NamespaceStore.first.full_base_path).to eq('/monkey')
+      expect(Restspec::NamespaceStore.get(:monkey).full_base_path).to eq('/monkey')
     end
 
     it 'yields a Restspec::Endpoints::NamespaceDSL attached to the namespace to the block' do
@@ -39,19 +39,19 @@ describe Restspec::Endpoints::DSL do
       end
 
       expect(namespace_dsl).to have_received(:call)
-      expect(namespace_dsl.namespace).to eq(Restspec::NamespaceStore.first)
+      expect(namespace_dsl.namespace).to eq(Restspec::NamespaceStore.get(:monkey))
     end
   end
 
   describe '#resource' do
     it 'creates a namespace with the base_path equals to /:name' do
       dsl.resource(:monkeys) { }
-      expect(Restspec::NamespaceStore.first.full_base_path).to eq('/monkeys')
+      expect(Restspec::NamespaceStore.get(:monkeys).full_base_path).to eq('/monkeys')
     end
 
     it 'creates a namespace with the schema attached to some schema with the same name' do
       dsl.resource(:monkeys) { }
-      expect(Restspec::NamespaceStore.first.schema_name).to eq(:monkey)
+      expect(Restspec::NamespaceStore.get(:monkeys).schema_name).to eq(:monkey)
     end
   end
 

@@ -2,6 +2,9 @@ require 'delegate'
 
 module Restspec
   module Endpoints
+    # A response is a representation of the triad returned
+    # by the API calls. They represent the status code, the headers
+    # and the response's body.
     class Response
       attr_accessor :endpoint, :headers, :code, :raw_body
 

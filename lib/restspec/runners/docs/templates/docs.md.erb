@@ -1,8 +1,8 @@
 # API
 ## Hello World
 
-<% namespace_store.each do |namespace| %>
-## <%= namespace.name.capitalize %>
+<% namespace_store.each do |name, namespace| %>
+## <%= name.capitalize %>
 
 <% namespace.all_endpoints.each do |endpoint| %>
 ### <%= endpoint.name.capitalize %> [<%= endpoint.method.upcase %> <%= endpoint.full_path %>]

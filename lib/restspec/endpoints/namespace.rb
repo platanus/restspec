@@ -5,7 +5,7 @@ module Restspec
       attr_writer :schema_name
       attr_reader :endpoints
 
-      def self.create(name = '')
+      def self.create(name)
         namespace = new(name)
         Stores::NamespaceStore.store(namespace)
         namespace

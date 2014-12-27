@@ -11,7 +11,7 @@ require 'restspec/runners/docs/docs_runner'
 
 class RestspecCLI < Thor
   register(Restspec::InstallRunner, 'install', 'install [your_test_folder]', 'Type restspec install for more help.')
-  # register(Restspec::DocsRunner, 'docs', 'docs [your_docs_location]', 'Type restspec docs for more help.')
+  register(Restspec::DocsRunner, 'docs', 'docs [your_docs_location]', 'Type restspec docs for more help.')
 end
 
 RestspecCLI.start(ARGV)
