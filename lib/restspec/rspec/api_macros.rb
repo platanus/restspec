@@ -56,7 +56,7 @@ module Restspec
 
             -> do
               endpoint.execute_once(
-                body: payload.merge(@payload || {}),
+                body: payload,
                 url_params: url_params.merge(resource_params).merge(@url_params || {}),
                 query_params: query_params.merge(@query_params || {}),
                 before: ->do
@@ -72,7 +72,7 @@ module Restspec
           subject { response }
 
           let(:payload) do
-            defined?(example_payload) ? example_payload : {}
+            defined?(example_payload) ? example_payload : nil
           end
 
           let(:url_params) do
