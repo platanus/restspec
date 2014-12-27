@@ -186,7 +186,7 @@ Be sure to add your issue with a `bug` label or the `question` one.
 
 ## A note about SemVer
 
-We are using SemVer from 0.0.4 onwards. Versions before 0.0.4 doesn't use Semver and they add some features (intended for MINOR releases, not for PATCH releases). With the addition of 0.0.5, we will be using a CHANGELOG.md file with the track of the commits that made their way to that version.
+We are using SemVer from 0.0.4 onwards. Versions before 0.0.4 doesn't use Semver and they add some features (intended for MINOR releases, not for PATCH releases). With the addition of 0.1, we will be using a CHANGELOG.md file with the track of the commits that made their way to that version.
 
 ## Contribute
 
