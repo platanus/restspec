@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rspec-collection_matchers", "~> 1.0"
   spec.add_dependency "thor", "~> 0.19"
   spec.add_dependency "tilt", "~> 2.0"
+  spec.add_dependency "ruby_deep_clone", "~> 0.6"
 end

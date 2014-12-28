@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'deep_clone'
 
 module Restspec
   module Endpoints
@@ -16,7 +17,8 @@ module Restspec
         roles = options.delete(:for) || DEFAULT_ROLES
 
         roles.each do |role|
-          schema_roles[role] = Restspec::SchemaStore.fetch(schema_name).clone
+          schema_roles[role] = DeepClone.clone(Restspec::SchemaStore.fetch(schema_name))
+
           if options.any?
             schema_roles[role].extend_with(options)
           end
