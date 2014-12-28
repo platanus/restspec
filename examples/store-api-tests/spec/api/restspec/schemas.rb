@@ -1,6 +1,6 @@
 mixin :timestamps do
-  attribute :created_at, datetime, :for => [:checks]
-  attribute :updated_at, datetime, :for => [:checks]
+  attribute :created_at, datetime, :for => [:response]
+  attribute :updated_at, datetime, :for => [:response]
 end
 
 schema :product do
@@ -10,7 +10,7 @@ schema :product do
   attribute :code, string
   attribute :price, decimal | decimal_string
   attribute :category_id, schema_id(:category)
-  attribute :category, embedded_schema(:category), :for => [:checks]
+  attribute :category, embedded_schema(:category), :for => [:response]
 end
 
 schema :category do

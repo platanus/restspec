@@ -17,7 +17,11 @@ module Restspec
         roles = options.delete(:for) || DEFAULT_ROLES
 
         roles.each do |role|
-          schema_roles[role] = DeepClone.clone(Restspec::SchemaStore.fetch(schema_name))
+          schema_found = Restspec::SchemaStore.fetch(schema_name)
+
+          schema_roles[role] = DeepClone.clone(schema_found)
+          schema_roles[role].intention = role
+          schema_roles[role].original_schema = schema_found
 
           if options.any?
             schema_roles[role].extend_with(options)

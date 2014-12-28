@@ -78,7 +78,7 @@ module Restspec
       #
       #  schema :books do
       #   attribute :title, string
-      #   attribute :created_at, datetime, :for => [:checks]
+      #   attribute :created_at, datetime, :for => [:response]
       #  end
       #
       # @param (see Attribute#initialize)

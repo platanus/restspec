@@ -52,7 +52,7 @@ describe SingleSchemaDSL do
     end
 
     context 'when the :for option is just for checks' do
-      let(:attribute) { dsl.attribute('attr_name', type_instance, for: [:checks]) }
+      let(:attribute) { dsl.attribute('attr_name', type_instance, for: [:response]) }
 
       it 'is not allowed to generate examples' do
         expect(attribute.can_generate_examples?).to eq(false)

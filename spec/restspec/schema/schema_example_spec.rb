@@ -22,7 +22,7 @@ describe SchemaExample do
 
     context 'with an attribute not allowed to generate examples' do
       before do
-        schema.attributes['hidden'] = Attribute.new(:hidden, hidden_type, :for => [:checks])
+        schema.attributes['hidden'] = Attribute.new(:hidden, hidden_type, :for => [:response])
       end
 
       it 'does not include the hidden attribute' do

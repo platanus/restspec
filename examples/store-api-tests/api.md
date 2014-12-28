@@ -12,10 +12,10 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "doloremque",
-    "code": "sit",
-    "price": 73.23,
-    "category_id": "8"
+    "name": "consequatur",
+    "code": "corporis",
+    "price": 86.56,
+    "category_id": "5"
   }
   ```
 
@@ -26,10 +26,15 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "molestiae",
-    "code": "distinctio",
-    "price": 12.71,
-    "category_id": "6"
+    "created_at": "2014-12-08T20:04:00-05:00",
+    "updated_at": "2014-12-02T21:02:47-05:00",
+    "name": "ut",
+    "code": "nobis",
+    "price": 13.52,
+    "category_id": "1",
+    "category": {
+      "name": "delectus"
+    }
   }
   ```
 
@@ -42,10 +47,12 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "eum",
-    "code": "labore",
-    "price": 44.15,
-    "category_id": "3"
+    "created_at": "2014-12-27T12:23:04-05:00",
+    "updated_at": "2014-12-04T23:20:43-05:00",
+    "name": "voluptatem",
+    "code": "facilis",
+    "price": 41.47,
+    "category_id": "8"
   }
   ```
 
@@ -58,10 +65,15 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "nihil",
-    "code": "ut",
-    "price": 38.38,
-    "category_id": "8"
+    "created_at": "2014-11-28T20:21:40-05:00",
+    "updated_at": "2014-12-28T08:10:27-05:00",
+    "name": "quasi",
+    "code": "rerum",
+    "price": 39.48,
+    "category_id": "0",
+    "category": {
+      "name": "saepe"
+    }
   }
   ```
 
@@ -74,10 +86,15 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "aut",
-    "code": "dolores",
-    "price": 51.59,
-    "category_id": "6"
+    "created_at": "2014-12-27T02:32:32-05:00",
+    "updated_at": "2014-12-05T22:31:32-05:00",
+    "name": "iure",
+    "code": "autem",
+    "price": 47.17,
+    "category_id": "1",
+    "category": {
+      "name": "ut"
+    }
   }
   ```
 
@@ -99,7 +116,7 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "eum"
+    "name": "quaerat"
   }
   ```
 
@@ -112,7 +129,7 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "optio"
+    "name": "amet"
   }
   ```
 
@@ -125,7 +142,7 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "ut"
+    "name": "consequatur"
   }
   ```
 
@@ -138,7 +155,7 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "velit"
+    "name": "voluptatem"
   }
   ```
 
@@ -157,10 +174,15 @@ The payload is an instance of the **product** schema.
 
   ```json
   {
-    "name": "blanditiis",
-    "code": "aut",
-    "price": 52.95,
-    "category_id": "6"
+    "created_at": "2014-12-13T00:42:13-05:00",
+    "updated_at": "2014-12-12T18:31:59-05:00",
+    "name": "labore",
+    "code": "exercitationem",
+    "price": 15.84,
+    "category_id": "0",
+    "category": {
+      "name": "incidunt"
+    }
   }
   ```
 

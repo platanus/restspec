@@ -83,8 +83,8 @@ schema :product do
   attribute :name, string
   attribute :code, string
   attribute :price, decimal | decimal_string
-  attribute :category_id, schema_id(:category), :for => [:examples]
-  attribute :category, embedded_schema(:category), :for => [:checks]
+  attribute :category_id, schema_id(:category), :for => [:payload]
+  attribute :category, embedded_schema(:category), :for => [:response]
 end
 
 schema :category do

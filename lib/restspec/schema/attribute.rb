@@ -36,15 +36,15 @@ module Restspec
       #   - **example**: A callable object (eg: a lambda) that returns something.
       #   - **for**: Defines what abilities this attributes has.
       #     This is an array that can contains none, some or all the symbols
-      #     `:checks` and `:examples`. This option defaults to `[:checks, :examples]`,
-      #     allowing the attribute to be used for run validations from {Checker#check!}
-      #     and for generating examples from {SchemaExample#value}.
+      #     `:response` and `:payload`. This option defaults to `[:response, :payload]`,
+      #     allowing the attribute to be used for run validations from {Checker#check!} (`:response`)
+      #     and for generating payload from {SchemaExample#value} (`:payload`).
       # @return A new instance of Attribtue.
       def initialize(name, type, options = {})
         self.name = name
         self.type = type
         self.example_override = options.fetch(:example, nil)
-        self.allowed_abilities = options.fetch(:for, [:checks, :examples])
+        self.allowed_abilities = options.fetch(:for, [:response, :payload])
       end
 
       # The inner example in the attribute created calling the :example option
@@ -55,14 +55,14 @@ module Restspec
         @example ||= example_override
       end
 
-      # @return [true, false] if the attribute has the ability to generate examples or not
-      def can_generate_examples?
-        allowed_abilities.include?(:examples)
+      # @return [true, false] if the attribute has the ability to be used in payloads.
+      def can_be_checked?
+        allowed_abilities.include?(:payload)
       end
 
-      # @return [true, false] if the attribute has the ability to be checked
-      def can_be_checked?
-        allowed_abilities.include?(:checks)
+      # @return [true, false] if the attribute has the ability being passed
+      def can?(ability)
+        allowed_abilities.include?(ability)
       end
 
       private

@@ -10,6 +10,10 @@ module Restspec
       # The set of attributes that conforms the schema.
       attr_reader :attributes
 
+      # TODO: Document
+      attr_accessor :intention
+      attr_accessor :original_schema
+
       # @param name [Symbol] The name of the schema
       # @return a new {Restspec::Schema::Schema Schema} object
       def initialize(name)
@@ -23,6 +27,14 @@ module Restspec
       def extend_with(without: [])
         without.each { |attribute_name| attributes.delete(attribute_name.to_s) }
         self
+      end
+
+      def attributes_for_intention
+        return attributes if intention.blank?
+
+        attributes.inject({}) do |hash, (name, attribute)|
+          attribute.can?(intention) ? hash.merge(name => attribute) : hash
+        end
       end
 
       private
