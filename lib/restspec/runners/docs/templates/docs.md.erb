@@ -7,14 +7,30 @@
 <% namespace.all_endpoints.each do |endpoint| %>
 ### <%= endpoint.name.capitalize %> [<%= endpoint.method.upcase %> <%= endpoint.full_path %>]
 
-Returns schema **<%= endpoint.schema_name %>**
+<% if payload_schema = endpoint.schema_for(:payload) %>
+#### Payload
 
-<% schema = schema_store.get(endpoint.schema_name) %>
+The payload is an instance of the **<%= payload_schema.name %>** schema.
 
-|  Attribute  |             Type           |     Example    |
-|-------------|:--------------------------:|---------------:|
-<% schema.attributes.each do |name, attribute| %>
-| <%= name %> | <%= attribute.type.to_s %> | <%= attribute.type.example_for(attribute) %> |
+<% sample = Restspec::Schema::SchemaExample.new(payload_schema).value %>
+
+  ```json
+<%= JSON.pretty_generate(sample).gsub(/^/, '  ') %>
+  ```
+
+<% end %>
+
+#### Response
+<% if response_schema = endpoint.schema_for(:response) %>
+  Returns schema **<%= response_schema.name %>**
+
+  <% sample = Restspec::Schema::SchemaExample.new(response_schema).value %>
+
+  ```json
+<%= JSON.pretty_generate(sample).gsub(/^/, '  ') %>
+  ```
+<% else %>
+  The response is empty.
 <% end %>
 
 <% end %>
