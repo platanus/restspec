@@ -31,7 +31,7 @@ resource :categories do
 
     get :show
     put :update
-    delete :destroy
+    delete(:destroy) { no_schema }
 
     get :products, '/products' do
       schema :product
