@@ -83,11 +83,11 @@ module Restspec
         endpoint_dsl = EndpointDSL.new(endpoint)
         namespace.add_endpoint(endpoint)
 
-        endpoint_dsl.instance_eval(&block)
-
         endpoint_config_blocks.each do |config_block|
           endpoint_dsl.instance_eval(&config_block)
         end
+
+        endpoint_dsl.instance_eval(&block)
 
         Restspec::EndpointStore.store(endpoint)
       end
