@@ -23,7 +23,7 @@ describe Attribute do
     end
 
     context 'with the option' do
-      let(:attribute) { Attribute.new(:name, type, :for => [:response]) }
+      let(:attribute) { Attribute.new(:name, type, :for => [:payload]) }
       it { should eq(true) }
     end
   end

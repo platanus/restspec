@@ -19,16 +19,6 @@ describe SchemaExample do
     let(:schema_example) { SchemaExample.new(schema) }
 
     it { should eq(name: 'name', age: 18)}
-
-    context 'with an attribute not allowed to generate examples' do
-      before do
-        schema.attributes['hidden'] = Attribute.new(:hidden, hidden_type, :for => [:response])
-      end
-
-      it 'does not include the hidden attribute' do
-        expect(subject).to_not include(:hidden)
-      end
-    end
   end
 
   context 'with extensions' do

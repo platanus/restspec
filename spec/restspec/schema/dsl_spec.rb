@@ -50,30 +50,6 @@ describe SingleSchemaDSL do
       expect(attribute.name).to eq('attr_name')
       expect(attribute.type).to eq(type_instance)
     end
-
-    context 'when the :for option is just for checks' do
-      let(:attribute) { dsl.attribute('attr_name', type_instance, for: [:response]) }
-
-      it 'is not allowed to generate examples' do
-        expect(attribute.can_generate_examples?).to eq(false)
-      end
-
-      it 'is allowed to run in validations' do
-        expect(attribute.can_be_checked?).to eq(true)
-      end
-    end
-
-    context 'when the :for option is just for examples' do
-      let(:attribute) { dsl.attribute('attr_name', type_instance, for: [:examples]) }
-
-      it 'is allowed to generate examples' do
-        expect(attribute.can_generate_examples?).to eq(true)
-      end
-
-      it 'is not allowed to run in validations' do
-        expect(attribute.can_be_checked?).to eq(false)
-      end
-    end
   end
 
   describe '#include_attributes' do
