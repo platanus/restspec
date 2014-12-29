@@ -12,25 +12,20 @@
 
 The payload is an instance of the **<%= payload_schema.name %>** schema.
 
-<% sample = Restspec::Schema::SchemaExample.new(payload_schema).value %>
-
   ```json
-<%= JSON.pretty_generate(sample).gsub(/^/, '  ') %>
+<%= json_example payload_schema %>
   ```
-
 <% end %>
 
 #### Response
 <% if response_schema = endpoint.schema_for(:response) %>
-  Returns schema **<%= response_schema.name %>**
-
-  <% sample = Restspec::Schema::SchemaExample.new(response_schema).value %>
+Returns schema **<%= response_schema.name %>**
 
   ```json
-<%= JSON.pretty_generate(sample).gsub(/^/, '  ') %>
+<%= json_example response_schema %>
   ```
 <% else %>
-  The response is empty.
+The response is empty.
 <% end %>
 
 <% end %>
