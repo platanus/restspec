@@ -73,7 +73,7 @@ module Restspec::Schema::Types
     end
 
     def create_schema_name
-      example_options.fetch(:create_schema, create_endpoint.schema_name)
+      example_options.fetch(:create_schema) { create_endpoint.schema_for(:payload).name }
     end
 
     def perform_validation?
