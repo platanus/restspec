@@ -10,8 +10,8 @@ module Restspec::Schema::Types
     #   @param options [Hash, Object] A hash of options or
     #     something to instantiate the type.
     def self.define_type_method(method_name, type_class)
-      define_method(method_name) do |options = {}|
-        type_class.new(options)
+      define_method(method_name) do |*args|
+        type_class.new(*args)
       end
     end
 
