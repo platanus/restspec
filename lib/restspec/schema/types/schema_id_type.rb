@@ -7,10 +7,10 @@ module Restspec::Schema::Types
     end
 
     def example_for(attribute)
-      return sample_item.try(id_property) if sample_item.present?
+      return sample_item[id_property] if sample_item.present?
 
-      if create_response.code == 201 && create_response.body.try(id_property).present?
-        create_response.body.try(id_property)
+      if create_response.code == 201 && create_response.body[id_property].present?
+        create_response.body[id_property]
       else
         hardcoded_fallback
       end
@@ -20,7 +20,7 @@ module Restspec::Schema::Types
 
     def valid?(attribute, value)
       return true unless perform_validation?
-      item_ids.any? { |item| item.try(id_property) == value }
+      item_ids.any? { |item| item[id_property] == value }
     end
 
     private
