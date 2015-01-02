@@ -45,11 +45,15 @@ module Restspec::Schema::Types
 
     def get_sample_item
       fetch_endpoint = get_index_endpoint
-      fetch_endpoint.execute.body.try(:sample)
+      if fetch_endpoint.present?
+        fetch_endpoint.execute.body.try(:sample)
+      end
     end
 
     def create_response
-      create_endpoint.execute(body: create_example)
+      if create_endpoint.present?
+        create_endpoint.execute(body: create_example)
+      end
     end
 
     def get_create_endpoint
