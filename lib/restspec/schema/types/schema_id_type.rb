@@ -9,8 +9,8 @@ module Restspec::Schema::Types
     def example_for(attribute)
       return sample_item[id_property] if sample_item.present?
 
-      if create_response.code == 201 && create_response.body[id_property].present?
-        create_response.body[id_property]
+      if create_response.code == 201 && value = response_property_value(create_response, id_property)
+        value
       else
         hardcoded_fallback
       end
@@ -26,6 +26,17 @@ module Restspec::Schema::Types
     private
 
     attr_accessor :schema_name
+
+    def response_property_value(response, property)
+      schema = Restspec::SchemaStore.get(schema_name)
+      body = response.body
+
+      if schema.root?
+        body[schema.root_name][id_property]
+      else
+        body[id_property]
+      end
+    end
 
     def find_endpoint(name)
       Restspec::EndpointStore.get(name)
