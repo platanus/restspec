@@ -10,15 +10,22 @@ module Restspec
       # The set of attributes that conforms the schema.
       attr_reader :attributes
 
+      # The root raw value
+      attr_reader :root
+
       # TODO: Document
       attr_accessor :intention
       attr_accessor :original_schema
 
       # @param name [Symbol] The name of the schema
+      # @param options [Hash] Some options:
+      #   - root: If the schema should have a root `{ schema: }` around the object. If this
+      #     attribute is a symbol or string, that will be the schema root to use.
       # @return a new {Restspec::Schema::Schema Schema} object
-      def initialize(name)
+      def initialize(name, options = {})
         self.name = name
         self.attributes = {}
+        self.root = options[:root]
       end
 
       # @param without [Array] An array of attributes that should be removed from the schema.
@@ -37,9 +44,19 @@ module Restspec
         end
       end
 
+      #
+      # @return [true, false] if the schema must include a root.
+      def root?
+        !!root
+      end
+
+      def root_name
+        root == true ? name.to_sym : root.to_sym
+      end
+
       private
 
-      attr_writer :name, :attributes
+      attr_writer :name, :attributes, :root
     end
   end
 end

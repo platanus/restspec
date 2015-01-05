@@ -15,15 +15,25 @@ module Restspec
       # It returns the generated example.
       # @return [Restspec::Values::SuperHash] generated example.
       def value
-        attributes.inject({}) do |sample, (_, attribute)|
+        example_attributes = attributes.inject({}) do |sample, (_, attribute)|
           sample.merge(attribute.name => AttributeExample.new(attribute).value)
         end.merge(extensions)
+
+        if schema.root?
+          wrap_in_root(example_attributes)
+        else
+          example_attributes
+        end
       end
 
       private
 
       def attributes
         schema.attributes_for_intention
+      end
+
+      def wrap_in_root(hash)
+        { schema.root_name => hash }
       end
     end
   end

@@ -3,8 +3,9 @@ require 'spec_helper'
 include Restspec::Schema
 
 describe Checker do
+  let(:options) { {} }
   let(:schema) do
-    Schema.new(:product).tap do |schema|
+    Schema.new(:product, options).tap do |schema|
       schema.attributes[:name] = Attribute.new(:name, Types::StringType.new)
     end
   end
@@ -17,6 +18,26 @@ describe Checker do
         expect do
           checker.check!(nil)
         end.to raise_error(Checker::NoObjectError, /Nil/)
+      end
+    end
+
+    context 'when the schema is root?' do
+      let(:options) { { root: 'monkey' } }
+
+      context 'when no root is present' do
+        it 'raises a Checker::NoRootFoundError' do
+          expect do
+            checker.check!(age: 10)
+          end.to raise_error(Checker::NoRootFoundError, /monkey/)
+        end
+      end
+
+      context 'when the root is present' do
+        it 'does not raises a Checker::NoRootFoundError' do
+          expect do
+            checker.check!(monkey: { name: 'Apu' })
+          end.to_not raise_error
+        end
       end
     end
 

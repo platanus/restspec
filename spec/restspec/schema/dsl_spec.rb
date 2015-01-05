@@ -7,12 +7,10 @@ describe DSL do
 
   describe '#schema' do
     let(:single_dsl) { double }
-    let(:schema) { double(name: 'name') }
+    let(:schema) { Schema.new(name: 'name') }
 
     before do
-      allow(SingleSchemaDSL).to receive(:new).and_return(single_dsl)
-      allow(single_dsl).to receive(:instance_eval).and_return(single_dsl)
-      allow(single_dsl).to receive(:schema).and_return(schema)
+      allow(SingleSchemaDSL).to receive(:new).and_call_original
     end
 
     it 'creates a SingleSchemaDSL with the given name' do
@@ -23,6 +21,18 @@ describe DSL do
     it 'store the schema into the SchemaStore' do
       dsl.schema('name') { }
       expect(Restspec::SchemaStore.get('name')).to be_present
+    end
+
+    it 'stores a schema with the root attribute set to false' do
+      dsl.schema('dog') { }
+      expect(Restspec::SchemaStore.get('name').root?).to eq(false)
+    end
+
+    context 'with the root option set to true' do
+      it 'creates a schema with the root option set to true' do
+        dsl.schema('dog', root: true) { }
+        expect(Restspec::SchemaStore.get('dog').root?).to eq(true)
+      end
     end
   end
 end
@@ -54,7 +64,7 @@ describe SingleSchemaDSL do
 
   describe '#include_attributes' do
     let(:main_dsl) { DSL.new }
-    let(:schema_dsl) { SingleSchemaDSL.new(:name, main_dsl.send(:mixins)) }
+    let(:schema_dsl) { SingleSchemaDSL.new(:name, {}, main_dsl.send(:mixins)) }
 
     before do
       main_dsl.mixin :test_mixin do

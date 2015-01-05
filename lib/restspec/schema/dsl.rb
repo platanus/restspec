@@ -11,16 +11,17 @@ module Restspec
       # instance for further definitions.
       #
       # @example
-      #   schema :book do
+      #   schema :book, root: true do
       #     puts self.class # SingleSchemaDSL
       #     puts self.schema.class # Schema
       #   end
       #
       # @param name {Symbol} the schema's name
+      # @param options {Hash} a set of options for {Schema#initialize}
       # @param definition A block that will be executed inside the context
       #   of a {SingleSchemaDSL} object.
-      def schema(name, &definition)
-        dsl = SingleSchemaDSL.new(name, mixins)
+      def schema(name, options = {}, &definition)
+        dsl = SingleSchemaDSL.new(name, options, mixins)
         dsl.instance_eval(&definition)
         Restspec::SchemaStore.store(dsl.schema)
       end
@@ -66,8 +67,8 @@ module Restspec
       # @return {Schema} the current schema
       attr_reader :schema
 
-      def initialize(name, mixins = {})
-        self.schema = Schema.new(name)
+      def initialize(name, options = {}, mixins = {})
+        self.schema = Schema.new(name, options)
         self.mixins = mixins
       end
 

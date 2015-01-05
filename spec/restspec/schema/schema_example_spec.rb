@@ -15,6 +15,28 @@ describe SchemaExample do
     schema.attributes['age'] = Attribute.new(:age, integer_type)
   end
 
+  describe 'root cases' do
+    let(:schema_example) { SchemaExample.new(schema) }
+
+    context 'with a schema that root? with a value' do
+      let(:schema) { Schema.new(:dog, root: 'monkey') }
+
+      it 'generates an example wrapped in the root value' do
+        expect(schema_example.value).to have_key(:monkey)
+        expect(schema_example.value[:monkey]).to have_key(:name)
+        expect(schema_example.value[:monkey]).to have_key(:age)
+      end
+    end
+
+    context 'with a schema that root? with true' do
+      let(:schema) { Schema.new(:dog, root: true) }
+
+      it 'generates an example wrapped in the schema name' do
+        expect(schema_example.value).to have_key(:dog)
+      end
+    end
+  end
+
   context 'without extensions' do
     let(:schema_example) { SchemaExample.new(schema) }
 

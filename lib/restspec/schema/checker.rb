@@ -24,6 +24,11 @@ module Restspec
       # @raise NoObjectError if parameter passed is not a hash.
       def check!(object)
         raise NoObjectError.new(object) unless object.is_a?(Hash)
+        raise NoRootFoundError.new(object, schema) if schema.root? && !object.has_key?(schema.root_name)
+
+        if schema.root?
+          object = object.fetch(schema.root_name)
+        end
 
         schema.attributes.each do |_, attribute|
           if attribute.can_be_checked?
@@ -126,6 +131,19 @@ module Restspec
 
         def to_s
           "The property #{attribute.name} of #{object} was not valid according to the type #{attribute.type}"
+        end
+      end
+
+      class NoRootFoundError < StandardError
+        attr_accessor :object, :schema
+
+        def initialize(object, schema)
+          self.object = object
+          self.schema = schema
+        end
+
+        def to_s
+          "The object #{object}:#{object.class} does not contain a root called #{schema.root_name}"
         end
       end
 
