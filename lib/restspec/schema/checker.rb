@@ -148,6 +148,8 @@ module Restspec
       end
 
       class NoObjectError < StandardError
+        include ActionView::Helpers::TextHelper
+
         attr_accessor :object
 
         def initialize(object)
@@ -155,7 +157,7 @@ module Restspec
         end
 
         def to_s
-          "The object #{object}:#{object.class} is not a hash. It doesn't have attributes to be checked"
+          "The object #{truncate object.to_s, escape: false}:#{object.class} is not a hash. It doesn't have attributes to be checked"
         end
       end
     end

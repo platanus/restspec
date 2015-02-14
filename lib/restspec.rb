@@ -5,6 +5,12 @@ end
 
 require 'active_support/core_ext/object'
 require 'active_support/json'
+require 'active_support/concern'
+require 'action_view/helpers/capture_helper'
+require 'action_view/helpers/output_safety_helper'
+require 'action_view/helpers/tag_helper'
+require 'action_view/helpers/sanitize_helper'
+require 'action_view/helpers/text_helper'
 
 require "restspec/values/status_code"
 require "restspec/values/super_hash"
